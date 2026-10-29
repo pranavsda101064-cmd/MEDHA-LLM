@@ -12,7 +12,7 @@ from typing import Protocol
 import numpy as np
 
 import config
-from medha.core.schema import LessonScript, split_sentences
+from medha.core.schema import LessonScript, LessonStep, split_sentences
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +46,22 @@ class SpeechTrack:
         path.parent.mkdir(parents=True, exist_ok=True)
         sf.write(str(path), self.audio, self.sample_rate, subtype="PCM_16")
         return path
+
+
+@dataclass(frozen=True)
+class SpeechChunk:
+    """Speech for one lesson step, without the lesson-level lead or step gap."""
+
+    step_index: int
+    audio: np.ndarray
+    sample_rate: int
+    sentence_ms: tuple[int, ...]
+    voice: str
+    speed: float
+
+    @property
+    def duration_ms(self) -> int:
+        return round(len(self.audio) / self.sample_rate * 1000)
 
 
 def _cache_key(
@@ -141,6 +157,78 @@ def _silence(sample_rate: int, duration_ms: int) -> np.ndarray:
     return np.zeros(count, dtype=np.float32)
 
 
+def _resolve_engine(
+    engine: Synthesizer | None,
+    *,
+    voice: str,
+    speed: float,
+) -> tuple[Synthesizer, str, str]:
+    if engine is None:
+        from .kokoro import KokoroEngine
+
+        engine = KokoroEngine(voice=voice, speed=speed)
+    elif getattr(engine, "voice", voice) != voice:
+        raise ValueError(f"engine voice is {engine.voice!r}, expected {voice!r}")
+    elif getattr(engine, "speed", speed) != speed:
+        raise ValueError(f"engine speed is {engine.speed!r}, expected {speed!r}")
+    resolved_voice = str(getattr(engine, "voice", voice))
+    engine_id = str(getattr(engine, "engine_id", "kokoro"))
+    return engine, resolved_voice, engine_id
+
+
+def _resolve_cache(cache: SpeechCache | None, use_cache: bool) -> SpeechCache | None:
+    if not use_cache:
+        return None
+    return cache if cache is not None else SpeechCache()
+
+
+def synthesize_step(
+    step: LessonStep,
+    *,
+    step_index: int = 0,
+    engine: Synthesizer | None = None,
+    cache: SpeechCache | None = None,
+    use_cache: bool = True,
+    voice: str = config.KOKORO_VOICE,
+    speed: float = config.KOKORO_SPEED,
+    sample_rate: int = config.TTS_SAMPLE_RATE,
+    sentence_gap_ms: int = config.TTS_SENTENCE_GAP_MS,
+) -> SpeechChunk:
+    """Synthesize one step so playback can start before the rest is ready."""
+    narration = step.narration
+    engine, voice, engine_id = _resolve_engine(engine, voice=voice, speed=speed)
+    cache = _resolve_cache(cache, use_cache)
+    sentences = split_sentences(narration)
+    parts: list[np.ndarray] = []
+    durations: list[int] = []
+    for sentence_index, sentence in enumerate(sentences):
+        samples = (
+            cache.load(sentence, voice, speed, sample_rate, engine_id)
+            if cache is not None
+            else None
+        )
+        if samples is None:
+            samples = engine.synthesize(sentence)
+            if samples.size == 0:
+                raise RuntimeError(f"empty speech for sentence: {sentence!r}")
+            if cache is not None:
+                cache.store(sentence, voice, speed, sample_rate, samples, engine_id)
+        samples = np.asarray(samples, dtype=np.float32).reshape(-1)
+        durations.append(round(samples.size / sample_rate * 1000))
+        parts.append(samples)
+        if sentence_index < len(sentences) - 1:
+            parts.append(_silence(sample_rate, sentence_gap_ms))
+    audio = np.concatenate(parts).astype(np.float32) if parts else np.zeros(0, dtype=np.float32)
+    return SpeechChunk(
+        step_index=step_index,
+        audio=audio,
+        sample_rate=sample_rate,
+        sentence_ms=tuple(durations),
+        voice=voice,
+        speed=speed,
+    )
+
+
 def synthesize_lesson(
     lesson: LessonScript,
     engine: Synthesizer | None = None,
@@ -154,56 +242,28 @@ def synthesize_lesson(
     step_gap_ms: int = config.TTS_STEP_GAP_MS,
 ) -> SpeechTrack:
     """Generate or load every sentence and assemble a playable lesson track."""
-    automatic_engine = engine is None
-    if engine is None:
-        if lesson.language == "en":
-            from .kokoro import KokoroEngine
-
-            engine = KokoroEngine(voice=voice, speed=speed)
-        else:
-            from .indic import IndicParlerEngine
-
-            engine = IndicParlerEngine(language=lesson.language, speed=speed)
-    if not automatic_engine:
-        if getattr(engine, "voice", voice) != voice:
-            raise ValueError(f"engine voice is {engine.voice!r}, expected {voice!r}")
-        if getattr(engine, "speed", speed) != speed:
-            raise ValueError(f"engine speed is {engine.speed!r}, expected {speed!r}")
-    voice = str(getattr(engine, "voice", voice))
-    engine_id = str(getattr(engine, "engine_id", "kokoro"))
-    if not use_cache:
-        cache = None
-    elif cache is None:
-        cache = SpeechCache()
+    resolved_speed = float(speed)
+    engine, voice, _engine_id = _resolve_engine(engine, voice=voice, speed=resolved_speed)
+    cache = _resolve_cache(cache, use_cache)
 
     parts: list[np.ndarray] = [np.zeros(0, dtype=np.float32)]
     if lead_ms > 0:
         parts.append(_silence(sample_rate, lead_ms))
     sentence_ms: list[tuple[int, ...]] = []
     for step_index, step in enumerate(lesson.steps):
-        sentences = split_sentences(step.narration)
-        if not sentences:
-            sentence_ms.append(())
-            continue
-        step_durations: list[int] = []
-        for sentence_index, sentence in enumerate(sentences):
-            samples = (
-                cache.load(sentence, voice, speed, sample_rate, engine_id)
-                if cache is not None
-                else None
-            )
-            if samples is None:
-                samples = engine.synthesize(sentence)
-                if samples.size == 0:
-                    raise RuntimeError(f"empty speech for sentence: {sentence!r}")
-                if cache is not None:
-                    cache.store(sentence, voice, speed, sample_rate, samples, engine_id)
-            samples = np.asarray(samples, dtype=np.float32).reshape(-1)
-            step_durations.append(round(samples.size / sample_rate * 1000))
-            parts.append(samples)
-            if sentence_index < len(sentences) - 1:
-                parts.append(_silence(sample_rate, sentence_gap_ms))
-        sentence_ms.append(tuple(step_durations))
+        chunk = synthesize_step(
+            step,
+            step_index=step_index,
+            engine=engine,
+            cache=cache,
+            use_cache=use_cache,
+            voice=voice,
+            speed=resolved_speed,
+            sample_rate=sample_rate,
+            sentence_gap_ms=sentence_gap_ms,
+        )
+        sentence_ms.append(chunk.sentence_ms)
+        parts.append(chunk.audio)
         if step_index < len(lesson.steps) - 1:
             parts.append(_silence(sample_rate, step_gap_ms))
 
@@ -216,5 +276,5 @@ def synthesize_lesson(
         sentence_gap_ms=max(0, sentence_gap_ms),
         step_gap_ms=max(0, step_gap_ms),
         voice=voice,
-        speed=speed,
+        speed=resolved_speed,
     )

@@ -112,6 +112,16 @@ class ChromaStore:
     def stats(self) -> CollectionStats:
         return CollectionStats(count=self.count(), collection=self.collection_name)
 
+    def has_document(self, result: IngestResult) -> bool:
+        current_ids = {chunk.chunk_id for chunk in result.chunks}
+        if not current_ids:
+            return False
+        existing = self.collection.get(
+            where={"doc_id": result.document.doc_id},
+            include=[],
+        )
+        return set(existing.get("ids") or []) == current_ids
+
     def replace_document(
         self,
         result: IngestResult,

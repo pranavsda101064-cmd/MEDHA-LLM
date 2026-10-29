@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import logging
 import re
+import threading
 from dataclasses import replace
 from pathlib import Path
 from typing import cast
@@ -40,16 +42,18 @@ import config
 from medha.core.schema import LanguageCode
 from medha.library.models import LibraryFilter, LibraryLesson
 from medha.library.repository import LessonLibrary
-from medha.render.playback import LessonPlayback
+from medha.render.playback import ChunkedPlayback, LessonPlayback
 from medha.render.timeline import CheckpointTiming
 from medha.render.widget import BoardWidget
 
 from .service import StudioOptions, StudioResult
-from .workers import GenerateWorker, OpenWorker
+from .workers import GenerateWorker, OpenWorker, VoiceTestWorker
+
+logger = logging.getLogger(__name__)
 
 SUBJECTS = ("math", "physics", "chemistry", "electronics", "ai", "general")
 DIFFICULTIES = ("beginner", "intermediate", "advanced")
-LANGUAGES = tuple(config.LANGUAGE_NAMES.items())
+LANGUAGES = tuple((name, code) for code, name in config.LANGUAGE_NAMES.items())
 
 STYLE = """
 QMainWindow, QWidget { background: #0b1110; color: #e7efe9; }
@@ -92,6 +96,27 @@ QTabBar::tab:selected { background: #2f6f5e; border-color: #4f9d84; }
 def _normalize_answer(value: str) -> str:
     cleaned = re.sub(r"[^\w\s+\-*/^=.]", " ", value.casefold())
     return " ".join(cleaned.split())
+
+
+def _friendly_error(message: str) -> str:
+    lowered = message.lower()
+    if any(
+        marker in lowered
+        for marker in (
+            "out of memory",
+            "bad allocation",
+            "paging file",
+            "tokenizers.pyd",
+            "0xc0000409",
+        )
+    ):
+        return (
+            "Medha ran out of memory while loading the local models.\n\n"
+            "Try closing other apps, unchecking Rerank, removing the material "
+            "from the Material list if it is already indexed, or enabling the "
+            "Windows pagefile. Then restart Medha."
+        )
+    return message
 
 
 def _answer_matches(answer: str, expected: str) -> bool:
@@ -241,10 +266,12 @@ class StudioWindow(QMainWindow):
             and not isinstance(saved_speed, bool)
             else config.KOKORO_SPEED
         )
-        self._playback: LessonPlayback | None = None
+        self._playback: LessonPlayback | ChunkedPlayback | None = None
         self._result: StudioResult | None = None
         self._thread: QThread | None = None
         self._worker: GenerateWorker | OpenWorker | None = None
+        self._voice_thread: QThread | None = None
+        self._voice_worker: VoiceTestWorker | None = None
         self._closing = False
         self._updating_slider = False
         self._library_lessons: dict[str, LibraryLesson] = {}
@@ -254,6 +281,19 @@ class StudioWindow(QMainWindow):
         self._build_ui()
         self._restore_form()
         self._start_library()
+        if self._tts:
+            self._warm_tts()
+
+    def _warm_tts(self) -> None:
+        def load() -> None:
+            try:
+                from medha.tts.kokoro import KokoroEngine
+
+                KokoroEngine(voice=self._voice, speed=self._speed).warmup()
+            except Exception:
+                logger.exception("Kokoro warmup failed; first speech may be slower")
+
+        threading.Thread(target=load, name="kokoro-warmup", daemon=True).start()
 
     # --- construction -------------------------------------------------
     def _build_ui(self) -> None:
@@ -371,6 +411,11 @@ class StudioWindow(QMainWindow):
         self.quality_label.setObjectName("quality")
         self.quality_label.setWordWrap(True)
         layout.addWidget(self.quality_label)
+        self.narration_label = QLabel("")
+        self.narration_label.setObjectName("hint")
+        self.narration_label.setWordWrap(True)
+        layout.addWidget(self.narration_label)
+        self._update_narration_label()
         layout.addStretch(1)
 
         self.generate_button.clicked.connect(self._generate)
@@ -472,8 +517,12 @@ class StudioWindow(QMainWindow):
         form.addRow("Speech speed", self.speed)
         layout.addLayout(form)
 
+        settings_row = QHBoxLayout()
         self.save_settings = QPushButton("Save settings")
-        layout.addWidget(self.save_settings)
+        self.test_voice = QPushButton("Test voice")
+        settings_row.addWidget(self.save_settings, 1)
+        settings_row.addWidget(self.test_voice, 1)
+        layout.addLayout(settings_row)
         note = QLabel(
             "Stored locally in data/medha.db. Lesson JSON files remain the source of truth."
         )
@@ -488,6 +537,7 @@ class StudioWindow(QMainWindow):
 
         self.tts_toggle.toggled.connect(self._set_tts)
         self.save_settings.clicked.connect(self._save_settings)
+        self.test_voice.clicked.connect(self._test_voice)
         return tab
 
     def _build_board(self) -> QWidget:
@@ -730,11 +780,30 @@ class StudioWindow(QMainWindow):
             )
 
     @property
-    def playback(self) -> LessonPlayback | None:
+    def playback(self) -> LessonPlayback | ChunkedPlayback | None:
         return self._playback
 
     def show_result(self, result: StudioResult) -> None:
         self._apply_result(result)
+
+    def _on_partial(self, playback: object) -> None:
+        assert isinstance(playback, ChunkedPlayback)
+        first = self._playback is not playback
+        if first:
+            if self._playback is not None:
+                self._playback.stop()
+            self._playback = playback
+            self._result = None
+            self._timer.stop()
+            self.slider.setRange(0, max(1, playback.duration_ms))
+            self.slider.setValue(0)
+            self._set_transport(True)
+            self.statusBar().showMessage(
+                "First step ready. Press Play while the rest prepares."
+            )
+        self.slider.setRange(0, max(1, playback.duration_ms))
+        self._update_time()
+        self.board_window.update()
 
     def seek_ms(self, position_ms: int) -> None:
         if self._playback is None:
@@ -744,17 +813,22 @@ class StudioWindow(QMainWindow):
         self.board_window.update()
 
     def _apply_result(self, result: StudioResult) -> None:
+        same_playback = self._playback is result.playback
+        if not same_playback and self._playback is not None:
+            self._playback.stop()
         self._result = result
         self._playback = result.playback
-        self._timer.stop()
+        if not same_playback:
+            self._timer.stop()
         lesson = result.lesson
         actions = sum(len(step.board) for step in lesson.steps)
         report = result.report
+        narration = "narration on" if self._tts else "narration off"
         self.meta_label.setText(
             f"{lesson.title}\n"
             f"{lesson.subject} / {lesson.difficulty} / {lesson.language}"
             f" / {len(lesson.steps)} steps / {actions} actions"
-            f" / {result.playback.duration_ms / 1000:.1f}s\n"
+            f" / {result.playback.duration_ms / 1000:.1f}s / {narration}\n"
             f"{result.path if result.path is not None else lesson.lesson_id}"
         )
         self.quality_label.setText(
@@ -763,13 +837,14 @@ class StudioWindow(QMainWindow):
         )
         self.quality_label.setToolTip("\n".join(result.warnings))
         self.slider.setRange(0, max(1, result.playback.duration_ms))
-        self.slider.setValue(0)
+        if not same_playback:
+            self.slider.setValue(0)
         self.slider.setEnabled(True)
         self._set_transport(True)
         self._update_time()
         self.board_window.update()
         self.statusBar().showMessage(
-            f"Ready: {lesson.lesson_id} (quality {report.score}/100)"
+            f"Ready: {lesson.lesson_id} (quality {report.score}/100, {narration})"
         )
 
     def _set_transport(self, enabled: bool) -> None:
@@ -828,7 +903,12 @@ class StudioWindow(QMainWindow):
         self.board_window.update()
 
     def _run_checkpoint(self, checkpoint: CheckpointTiming) -> None:
-        lesson_id = self._result.lesson.lesson_id if self._result is not None else ""
+        if self._result is not None:
+            lesson_id = self._result.lesson.lesson_id
+        elif self._playback is not None:
+            lesson_id = self._playback.prepared.lesson.lesson_id
+        else:
+            lesson_id = ""
         dialog = CheckpointDialog(self, self.library, lesson_id, checkpoint)
         dialog.exec()
         self._refresh_library()
@@ -879,7 +959,12 @@ class StudioWindow(QMainWindow):
         return tuple(paths)
 
     def _options(self) -> StudioOptions:
-        language = cast(LanguageCode, self.language.currentData() or "en")
+        raw_language = self.language.currentData()
+        language = (
+            cast(LanguageCode, raw_language)
+            if raw_language in config.SUPPORTED_LANGUAGES
+            else "en"
+        )
         return StudioOptions(
             topic=self.topic.text().strip(),
             subject=self.subject.currentText(),
@@ -903,6 +988,13 @@ class StudioWindow(QMainWindow):
         options = self._options()
         if not options.topic:
             QMessageBox.warning(self, "Topic needed", "Enter a lesson topic first.")
+            return
+        if len(options.topic) < 3:
+            QMessageBox.warning(
+                self,
+                "Topic too short",
+                "Use a topic with at least 3 characters.",
+            )
             return
         self._stop()
         self._set_busy(True)
@@ -933,6 +1025,7 @@ class StudioWindow(QMainWindow):
         worker.moveToThread(thread)
         thread.started.connect(worker.run)
         worker.status.connect(self._status)
+        worker.partial.connect(self._on_partial)
         worker.finished.connect(self._on_result)
         worker.failed.connect(self._on_failed)
         worker.finished.connect(thread.quit)
@@ -966,10 +1059,14 @@ class StudioWindow(QMainWindow):
             self.statusBar().showMessage(
                 f"Ready without speech: {result.tts_error}", 12000
             )
+        elif result.playback.audio_error:
+            self.statusBar().showMessage(
+                f"Audio output unavailable: {result.playback.audio_error}", 12000
+            )
 
     def _on_failed(self, message: str) -> None:
         self.statusBar().showMessage("Generation failed", 12000)
-        QMessageBox.critical(self, "Medha Studio", message)
+        QMessageBox.critical(self, "Medha Studio", _friendly_error(message))
 
     def _worker_finished(self) -> None:
         self._thread = None
@@ -991,6 +1088,7 @@ class StudioWindow(QMainWindow):
             self.library_delete,
             self.library_refresh,
             self.library_scan,
+            self.test_voice,
         ):
             widget.setEnabled(not busy)
         if busy:
@@ -1051,8 +1149,69 @@ class StudioWindow(QMainWindow):
         self.use_ocr.setChecked(bool(self._settings.get("use_ocr", False)))
         self.tts_toggle.setChecked(self._tts)
 
+    def _update_narration_label(self) -> None:
+        if not hasattr(self, "narration_label"):
+            return
+        state = "ON" if self._tts else "OFF"
+        self.narration_label.setText(
+            f"Narration: {state}"
+            + ("" if self._tts else " - enable it in Settings to hear lessons")
+        )
+
     def _set_tts(self, checked: bool) -> None:
         self._tts = bool(checked)
+        self._update_narration_label()
+        self._save_settings()
+        if checked:
+            if self._result is not None:
+                self.statusBar().showMessage(
+                    "Narration enabled. Reopen or regenerate this lesson to hear it.",
+                    12000,
+                )
+            else:
+                self.statusBar().showMessage(
+                    "Narration enabled. The voice loads on the next lesson.",
+                    8000,
+                )
+        else:
+            self.statusBar().showMessage(
+                "Narration disabled for future lessons.", 8000
+            )
+
+    def _test_voice(self) -> None:
+        if self._voice_thread is not None:
+            return
+        voice = self.voice.text().strip() or config.KOKORO_VOICE
+        speed = float(self.speed.value())
+        self.test_voice.setEnabled(False)
+        self.statusBar().showMessage("Loading voice for a test...")
+        thread = QThread(self)
+        worker = VoiceTestWorker(voice, speed)
+        worker.moveToThread(thread)
+        thread.started.connect(worker.run)
+        worker.finished.connect(self._voice_ok)
+        worker.failed.connect(self._voice_failed)
+        worker.finished.connect(thread.quit)
+        worker.failed.connect(thread.quit)
+        thread.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        thread.finished.connect(self._voice_finished)
+        self._voice_thread = thread
+        self._voice_worker = worker
+        thread.start()
+
+    def _voice_ok(self, message: str) -> None:
+        self.statusBar().showMessage(message, 8000)
+
+    def _voice_failed(self, message: str) -> None:
+        self.statusBar().showMessage("Voice test failed", 12000)
+        QMessageBox.warning(self, "Voice test failed", _friendly_error(message))
+
+    def _voice_finished(self) -> None:
+        self._voice_thread = None
+        self._voice_worker = None
+        if hasattr(self, "test_voice"):
+            self.test_voice.setEnabled(True)
 
     def _save_settings(self, *_args: object) -> None:
         if self.library is None:

@@ -139,6 +139,39 @@ _STEP = {
 }
 
 
+def llm_outline_schema() -> dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": {
+            "title": _STRING,
+            "target_concept": _STRING,
+            "steps": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "concept": _STRING,
+                        "goal": _STRING,
+                    },
+                    "required": ["concept"],
+                },
+            },
+        },
+        "required": ["title", "steps"],
+    }
+
+
+def llm_step_lesson_schema() -> dict[str, Any]:
+    schema = llm_lesson_schema()
+    schema["properties"]["steps"] = {
+        "type": "array",
+        "items": _STEP,
+        "minItems": 1,
+        "maxItems": 1,
+    }
+    return schema
+
+
 def llm_lesson_schema() -> dict[str, Any]:
     return {
         "type": "object",

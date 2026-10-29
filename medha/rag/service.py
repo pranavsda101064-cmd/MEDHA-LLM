@@ -10,24 +10,10 @@ import config
 from medha.ingest import IngestResult, ingest_file
 
 from .embeddings import BgeM3Embedder, Embedder
-from .errors import RagError
+from .errors import RagError, is_memory_error
 from .models import CollectionStats, IndexReport, QueryResult, RetrievedChunk
 from .reranker import BgeReranker, Reranker
 from .store import ChromaStore, StoreHit
-
-
-def _is_memory_error(exc: BaseException) -> bool:
-    if isinstance(exc, OSError) and getattr(exc, "winerror", None) == 1455:
-        return True
-    text = str(exc).lower()
-    markers = (
-        "paging file",
-        "out of memory",
-        "memory allocation",
-        "defaultcpuallocator",
-        "bad_alloc",
-    )
-    return any(marker in text for marker in markers)
 
 
 class ChunkStore(Protocol):
@@ -63,6 +49,14 @@ class RagService:
         self.store = store or ChromaStore()
 
     def index_result(self, result: IngestResult) -> IndexReport:
+        has_document = getattr(self.store, "has_document", None)
+        if callable(has_document) and has_document(result):
+            return IndexReport(
+                doc_id=result.document.doc_id,
+                indexed=0,
+                removed=0,
+                collection_count=self.store.count(),
+            )
         texts = [chunk.text for chunk in result.chunks]
         embeddings = self.embedder.embed(texts)
         return self.store.replace_document(result, embeddings)
@@ -75,6 +69,7 @@ class RagService:
         use_cache: bool = True,
     ) -> IndexReport:
         result = ingest_file(path, ocr=ocr, use_cache=use_cache)
+        gc.collect()
         return self.index_result(result)
 
     def query(
@@ -94,6 +89,17 @@ class RagService:
         if candidate_count < limit:
             raise RagError("candidates must be at least top_k")
 
+        index_count = self.store.count()
+        if index_count == 0:
+            return QueryResult(
+                query=text,
+                hits=[],
+                candidate_count=0,
+                reranked=False,
+                embedder=self.embedder.name,
+                reranker=self.reranker.name if self.reranker is not None else None,
+            )
+
         vector = self.embedder.embed([text])[0]
         hits = self.store.query(vector, n_results=candidate_count)
         if not hits:
@@ -106,7 +112,11 @@ class RagService:
                 reranker=self.reranker.name if self.reranker is not None else None,
             )
 
-        reranked = bool(rerank and self.reranker is not None)
+        reranked = bool(
+            rerank
+            and self.reranker is not None
+            and index_count >= config.RERANK_MIN_CHUNKS
+        )
         rerank_scores: list[float] | None = None
         if reranked and self.reranker is not None:
             try:
@@ -114,7 +124,7 @@ class RagService:
                     text, [hit.text for hit in hits]
                 )
             except Exception as exc:
-                if not _is_memory_error(exc):
+                if not is_memory_error(exc):
                     raise
                 reranked = False
                 rerank_scores = None

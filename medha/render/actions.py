@@ -139,8 +139,8 @@ def _add_text(
         width_px=width_px,
         max_width=rect[2],
         align=align,
-        tracking=0.03,
-        line_gap=1.35,
+        tracking=0.01,
+        line_gap=1.3,
     )
 
 
@@ -149,7 +149,7 @@ def _render_text(board: Board, action: WriteTextAction) -> list[StrokeItem]:
     style = action.style
     base = 0.032 * style.font_size
     if action.region == "title" and action.rect is None:
-        base = 0.078 * style.font_size
+        base = 0.074 * style.font_size
     elif action.region == "bottom" and action.rect is None:
         base = 0.026 * style.font_size
     size = _text_size(rect, base)

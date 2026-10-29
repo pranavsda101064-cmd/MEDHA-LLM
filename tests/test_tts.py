@@ -8,8 +8,8 @@ import pytest
 
 from medha.core.schema import LessonScript, validate_lesson
 from medha.render.timeline import build_timeline
-from medha.tts.audio import AudioPlayer
-from medha.tts.speech import SpeechCache, synthesize_lesson
+from medha.tts.audio import AudioPlayer, StreamingAudioPlayer
+from medha.tts.speech import SpeechCache, synthesize_lesson, synthesize_step
 
 
 class FakeEngine:
@@ -160,3 +160,45 @@ def test_engine_voice_mismatch_is_rejected(tmp_path: Path) -> None:
     engine.voice = "bf_emma"
     with pytest.raises(ValueError, match="engine voice"):
         synthesize_lesson(make_lesson(), engine=engine, cache=SpeechCache(tmp_path))
+
+
+def test_synthesize_step_returns_only_that_step(tmp_path: Path) -> None:
+    engine = FakeEngine()
+    chunk = synthesize_step(
+        make_lesson().steps[0],
+        step_index=0,
+        engine=engine,
+        cache=SpeechCache(tmp_path),
+        sentence_gap_ms=50,
+    )
+    assert engine.calls == ["One two.", "Three four."]
+    assert chunk.step_index == 0
+    assert chunk.sentence_ms == (8, 11)
+    assert chunk.duration_ms == 69
+    assert chunk.audio.size == 1656
+
+
+def test_streaming_audio_clock_survives_appends_and_pause() -> None:
+    player = StreamingAudioPlayer(24000, enabled=False)
+    assert player.duration_ms == 0
+    assert not player.buffering
+    player.append(np.zeros(2400, dtype=np.float32))
+    assert player.duration_ms == 100
+    player.start()
+    time.sleep(0.02)
+    assert 1 <= player.position_ms() <= 100
+    player.pause()
+    paused = player.position_ms()
+    time.sleep(0.01)
+    assert player.position_ms() == paused
+
+    player.append(np.zeros(2400, dtype=np.float32))
+    assert player.duration_ms == 200
+    assert player.position_ms() == paused
+    player.start()
+    time.sleep(0.02)
+    assert player.position_ms() >= paused
+    player.seek(150)
+    assert player.position_ms() == 150
+    player.stop()
+    assert player.position_ms() == 0

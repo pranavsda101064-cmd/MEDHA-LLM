@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 
 import config
 
@@ -43,7 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     library = LessonLibrary()
 
     if args.command == "index":
-        report = library.index_directory()
+        report = library.index_directory(Path(args.dir))
         print(
             f"indexed={report.indexed} skipped={report.skipped} "
             f"errors={len(report.errors)}"

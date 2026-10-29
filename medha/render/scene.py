@@ -129,8 +129,8 @@ class Board:
         width_px: float | None = None,
         max_width: float | None = None,
         align: str = "left",
-        tracking: float = 0.06,
-        line_gap: float = 1.35,
+        tracking: float = 0.01,
+        line_gap: float = 1.3,
     ) -> list[StrokeItem]:
         assert self.font is not None
         layout = self.font.layout(

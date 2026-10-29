@@ -12,6 +12,7 @@ from pydantic import ValidationError
 import config
 from medha.core.schema import LessonScript, split_sentences
 from medha.lesson.generator import estimate_duration_s
+from medha.lesson.layout import text_collisions
 from medha.render.actions import build_visuals, mathtext_segments, render_frame
 from medha.render.geometry import Transform
 from medha.render.scene import Board
@@ -81,6 +82,14 @@ def evaluate_lesson(
         issues.append(_issue("error", "board.no_actions", "lesson has no board actions"))
     if timeline.total_ms <= 0:
         issues.append(_issue("error", "timing.empty", "timeline has no duration"))
+    for left, right in text_collisions(lesson)[:8]:
+        issues.append(
+            _issue(
+                "warning",
+                "board.text_overlap",
+                f"text actions {left} and {right} overlap",
+            )
+        )
 
     for step in lesson.steps:
         text = step.narration.strip()

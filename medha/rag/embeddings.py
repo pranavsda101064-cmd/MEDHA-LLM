@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Protocol
@@ -70,6 +71,7 @@ class BgeM3Embedder:
         options.intra_op_num_threads = self.num_threads
         options.inter_op_num_threads = 1
         options.log_severity_level = 3
+        options.enable_cpu_mem_arena = False
         session = ort.InferenceSession(
             str(self.model_path),
             sess_options=options,
@@ -117,3 +119,4 @@ class BgeM3Embedder:
     def close(self) -> None:
         self._session = None
         self._tokenizer = None
+        gc.collect()

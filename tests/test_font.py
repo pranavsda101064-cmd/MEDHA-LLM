@@ -22,6 +22,22 @@ def test_text_layout_returns_chalk_strokes() -> None:
     assert layout.height > 0
 
 
+def test_narrow_glyphs_use_tighter_advance() -> None:
+    font = HersheyFont.load()
+    narrow = font.glyph("i")
+    wide = font.glyph("R")
+    assert narrow is not None
+    assert wide is not None
+    assert narrow.advance_units < wide.advance_units
+    assert font.advance("i", 0.1) < font.advance("m", 0.1)
+
+
+def test_title_text_fits_in_band() -> None:
+    font = HersheyFont.load()
+    width = font.line_width("Right Triangle", 0.074, tracking=0.01)
+    assert width < 0.6
+
+
 def test_text_layout_wraps() -> None:
     font = HersheyFont.load()
     layout = font.layout("A A A A A", size=0.1, max_width=0.05)

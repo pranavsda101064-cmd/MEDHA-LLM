@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 import config
-from medha.core.schema import LessonScript, Subject
+from medha.core.schema import LessonScript, LessonStep, Subject
 
 Difficulty = Literal["beginner", "intermediate", "advanced"]
 
@@ -49,3 +50,18 @@ class SourceExcerpt(StrictModel):
     source: str
     page_start: int | None = Field(default=None, ge=1)
     page_end: int | None = Field(default=None, ge=1)
+
+
+@dataclass(frozen=True)
+class LessonOutline:
+    title: str
+    target_concept: str
+    concepts: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class StepEvent:
+    index: int
+    lesson: LessonScript
+    step: LessonStep
+    cached: bool = False

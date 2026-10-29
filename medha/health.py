@@ -237,12 +237,20 @@ def check_compute_apps() -> Check:
 
 def check_resources() -> Check:
     ram_gb = psutil.virtual_memory().total / 1e9
+    swap_gb = psutil.swap_memory().total / 1e9
     free_gb = shutil.disk_usage(config.ROOT).free / 1e9
     status: Status = "ok"
-    notes: list[str] = [f"RAM {ram_gb:.1f} GB", f"disk free {free_gb:.1f} GB"]
+    notes: list[str] = [
+        f"RAM {ram_gb:.1f} GB",
+        f"pagefile {swap_gb:.1f} GB",
+        f"disk free {free_gb:.1f} GB",
+    ]
     if ram_gb < 12:
         status = "warn"
         notes.append("16 GB+ recommended")
+    if swap_gb < 1:
+        status = "warn"
+        notes.append("pagefile disabled; RAG models may hit native out-of-memory")
     if free_gb < 10:
         status = "warn"
         notes.append("need ~8 GB for the English demo")
@@ -261,7 +269,6 @@ OPTIONAL: tuple[tuple[str, str], ...] = (
     ("chromadb", "B6 retrieval"),
     ("onnxruntime", "B6 retrieval"),
     ("transformers", "B7 image descriptions"),
-    ("faster_whisper", "optional ASR"),
 )
 
 

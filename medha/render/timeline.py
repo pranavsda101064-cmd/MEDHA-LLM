@@ -45,6 +45,24 @@ def estimate_sentence_ms(sentence: str, chars_per_second: float = 15.0) -> int:
     return max(600, int(len(sentence) / max(1.0, chars_per_second) * 1000) + 120)
 
 
+def _distributed_starts(count: int, starts: list[int], total_ms: int) -> list[int]:
+    """Spread unanchored actions across a step instead of stacking them at zero."""
+    if count <= 0:
+        return []
+    if not starts:
+        return [0] * count
+    if count <= len(starts):
+        return [starts[index] for index in range(count)]
+    out: list[int] = []
+    previous = -1
+    for index in range(count):
+        target = round(index * total_ms / count)
+        target = max(previous + 1, target)
+        out.append(target)
+        previous = target
+    return out
+
+
 def build_timeline(
     lesson: LessonScript,
     sentence_ms: list[list[int]] | None = None,
@@ -54,7 +72,7 @@ def build_timeline(
     chars_per_second: float = 15.0,
 ) -> Timeline:
     timeline = Timeline()
-    cursor = max(0, lead_ms)
+    cursor = max(0, lead_ms) if lesson.steps else 0
     last_action_end = 0
     for step_index, step in enumerate(lesson.steps):
         sentences = split_sentences(step.narration)
@@ -77,6 +95,19 @@ def build_timeline(
                 sentence_cursor += max(0, sentence_gap_ms)
 
         timeline.step_start_ms.append(cursor)
+        meaningful_anchor = any(
+            action.start is not None and action.op != "clear" for action in step.board
+        )
+        distributed = (
+            []
+            if meaningful_anchor
+            else _distributed_starts(
+                sum(1 for action in step.board if action.start is None),
+                starts,
+                sentence_cursor,
+            )
+        )
+        distributed_index = 0
         previous_end = 0
         for action in step.board:
             local_start = previous_end
@@ -87,6 +118,9 @@ def build_timeline(
                 local_start = starts[action.start.sentence] + int(
                     sentence_duration * fraction
                 )
+            elif distributed:
+                local_start = distributed[distributed_index]
+                distributed_index += 1
             timing = ActionTiming(cursor + local_start, action.duration_ms)
             timeline.actions[action.id] = timing
             previous_end = max(previous_end, local_start + action.duration_ms)

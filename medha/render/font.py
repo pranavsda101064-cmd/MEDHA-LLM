@@ -14,8 +14,8 @@ import config
 
 from .geometry import Point, bounds
 
-DEFAULT_TRACKING = 0.06
-DEFAULT_LINE_GAP = 1.35
+DEFAULT_TRACKING = 0.01
+DEFAULT_LINE_GAP = 1.3
 
 
 @dataclass(frozen=True)
@@ -26,8 +26,17 @@ class Glyph:
     strokes: tuple[tuple[Point, ...], ...] = field(default_factory=tuple)
 
     @property
+    def ink_width(self) -> int:
+        xs = [x for stroke in self.strokes for x, _ in stroke]
+        if not xs:
+            return max(1, self.right - self.left)
+        return max(1, round(max(xs) - min(xs)))
+
+    @property
     def advance_units(self) -> int:
-        return max(4, self.right - self.left)
+        if not self.strokes:
+            return max(4, self.right - self.left)
+        return max(3, self.ink_width + 4)
 
 
 @dataclass

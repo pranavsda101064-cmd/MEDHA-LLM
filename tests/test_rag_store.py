@@ -94,6 +94,16 @@ def test_replace_document_and_query(store: Any) -> None:
     assert hits[0].heading_path == ("Newton",)
 
 
+def test_has_document_matches_existing_chunks(store: Any) -> None:
+    store.reset()
+    result = make_result()
+    assert not store.has_document(result)
+    store.replace_document(result, [[1, 0, 0, 0], [0, 1, 0, 0]])
+    assert store.has_document(result)
+    changed = make_result(include_second=False)
+    assert not store.has_document(changed)
+
+
 def test_stale_chunks_are_removed(store: Any) -> None:
     store.replace_document(make_result(), [[1, 0, 0, 0], [0, 1, 0, 0]])
     report = store.replace_document(make_result(include_first=False), [[0, 1, 0, 0]])

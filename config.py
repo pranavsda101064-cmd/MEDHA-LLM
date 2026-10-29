@@ -104,9 +104,9 @@ LLM_PROFILES: dict[str, LlmProfile] = {
         key="demo_gpu",
         model="qwen3:4b-instruct-2507-q4_K_M",
         num_ctx=3072,
-        num_gpu=99,
+        num_gpu=30,
         license="Apache-2.0",
-        notes="Default. Non-thinking Qwen3 4B; ~3.0 GB with q8 KV cache.",
+        notes="Default. Non-thinking Qwen3 4B; partial GPU offload for 4 GB VRAM.",
     ),
     "safe_gpu": LlmProfile(
         key="safe_gpu",
@@ -154,13 +154,14 @@ def active_llm() -> LlmProfile:
 
 
 # --- Lesson generation (Ollama on GPU) ---
-LESSON_PROMPT_VERSION = "b8-v3"
-LESSON_CACHE_VERSION = "b8"
+LESSON_PROMPT_VERSION = "b13-v1"
+LESSON_CACHE_VERSION = "b13"
 LESSON_DEFAULT_STEPS = 5
 LESSON_MAX_STEPS = 8
 LESSON_DEFAULT_AUDIENCE = "high-school students"
 LESSON_RAG_TOP_K = 5
 LESSON_MAX_MATERIAL_CHARS = 3200
+LESSON_STEP_MAX_MATERIAL_CHARS = 2200
 LESSON_MAX_CHUNK_CHARS = 700
 LESSON_MAX_ATTEMPTS = 2
 LESSON_SPEECH_WORDS_PER_SECOND = 2.6
@@ -185,6 +186,7 @@ RERANK_MAX_LENGTH = 512
 RERANK_NUM_THREADS = int(os.getenv("MEDHA_RERANK_THREADS", "8"))
 RAG_TOP_K = 5
 RERANK_CANDIDATES = 20
+RERANK_MIN_CHUNKS = 50
 CHROMA_COLLECTION = "medha_material"
 CHROMA_TELEMETRY = False
 

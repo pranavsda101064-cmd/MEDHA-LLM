@@ -36,6 +36,15 @@ class KokoroEngine:
             raise FileNotFoundError(f"Kokoro asset missing: {path}")
         return path
 
+    @property
+    def loaded(self) -> bool:
+        return self._pipeline is not None
+
+    def warmup(self) -> None:
+        """Load weights and G2P resources without synthesizing speech."""
+        self._load()
+        logger.info("Kokoro warmup complete (voice=%s, speed=%.2f)", self.voice, self.speed)
+
     def _load(self) -> None:
         if self._pipeline is not None:
             return

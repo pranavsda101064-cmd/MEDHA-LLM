@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from tools import fetch_docling, fetch_models, license_audit
+from tools import fetch_docling, fetch_models, license_audit, offline_audit
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -34,6 +34,43 @@ def test_license_audit_has_no_failures() -> None:
     findings = license_audit.audit_models(load_lock())
     failures = [finding for finding in findings if finding.status == "fail"]
     assert not failures, failures
+
+
+def test_offline_environment_blocks_hub_and_telemetry() -> None:
+    env = offline_audit.offline_environment()
+    assert env["HF_HUB_OFFLINE"] == "1"
+    assert env["TRANSFORMERS_OFFLINE"] == "1"
+    assert env["HF_DATASETS_OFFLINE"] == "1"
+    assert env["HF_HUB_DISABLE_TELEMETRY"] == "1"
+
+
+def test_offline_audit_reports_layout_and_models(tmp_path: Path) -> None:
+    lock = {
+        "profiles": {"core": "shared"},
+        "entries": [
+            {"id": "present", "profiles": ["core"], "source": {"type": "hf"}},
+            {"id": "missing", "profiles": ["core"], "source": {"type": "hf"}},
+            {"id": "optional", "profiles": ["indic"], "source": {"type": "hf"}},
+        ],
+    }
+
+    def verify(entry: dict) -> tuple[bool, str]:
+        return (entry["id"] == "present", "local" if entry["id"] == "present" else "absent")
+
+    checks = offline_audit.audit("core", root=tmp_path, lock=lock, verify=verify)
+    by_name = {check.name: check for check in checks}
+
+    assert by_name["layout"].status == "fail"
+    assert by_name["profile"].status == "ok"
+    assert by_name["model:present"].status == "ok"
+    assert by_name["model:missing"].status == "fail"
+    assert "model:optional" not in by_name
+
+
+def test_offline_audit_rejects_unknown_profile(tmp_path: Path) -> None:
+    lock = {"profiles": {"core": "shared"}, "entries": []}
+    checks = offline_audit.audit("nope", root=tmp_path, lock=lock, verify=lambda _: (True, "ok"))
+    assert any(check.name == "profile" and check.status == "fail" for check in checks)
 
 
 def test_docling_manifest_round_trip(tmp_path: Path) -> None:

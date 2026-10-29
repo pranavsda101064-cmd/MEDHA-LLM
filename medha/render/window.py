@@ -96,9 +96,9 @@ def run(
     if screenshot_path is not None:
 
         def capture() -> None:
-            screen = window.screen() or QApplication.primaryScreen()
-            if screen is not None:
-                screen.grabWindow(window.winId()).save(str(screenshot_path))
+            image = window.grabFramebuffer()
+            if not image.isNull():
+                image.save(str(screenshot_path))
 
         QTimer.singleShot(screenshot_delay_ms, capture)
     if duration_ms is not None:

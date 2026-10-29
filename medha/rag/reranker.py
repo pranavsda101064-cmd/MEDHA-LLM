@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Protocol
@@ -73,6 +74,7 @@ class BgeReranker:
             str(self.model_dir),
             local_files_only=True,
             dtype=torch.float32,
+            low_cpu_mem_usage=True,
         )
         model.eval()
         model.to("cpu")
@@ -108,3 +110,4 @@ class BgeReranker:
         self._model = None
         self._tokenizer = None
         self._torch = None
+        gc.collect()

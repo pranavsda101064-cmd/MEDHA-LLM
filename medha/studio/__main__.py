@@ -11,6 +11,7 @@ from PySide6.QtGui import QSurfaceFormat
 from PySide6.QtWidgets import QApplication
 
 import config
+from medha.core.logging import setup_logging
 
 from .app import StudioWindow
 
@@ -45,6 +46,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     config.ensure_dirs()
+    setup_logging()
     _configure_gl()
     app = QApplication.instance() or QApplication(sys.argv[:1])
     app.setApplicationName(f"{config.APP_NAME} Studio")

@@ -54,10 +54,21 @@ class OomReranker:
 
 
 class FakeStore:
-    def __init__(self, hits: list[StoreHit]) -> None:
+    def __init__(
+        self,
+        hits: list[StoreHit],
+        *,
+        has_document: bool = False,
+        count: int | None = None,
+    ) -> None:
         self.hits = hits
+        self.has_document_value = has_document
+        self.count_value = count if count is not None else (100 if hits else 0)
         self.replaced: list[tuple[IngestResult, list[list[float]]]] = []
         self.queries: list[tuple[list[float], int | None]] = []
+
+    def has_document(self, _result: IngestResult) -> bool:
+        return self.has_document_value
 
     def replace_document(
         self, result: IngestResult, embeddings: list[list[float]]
@@ -75,7 +86,7 @@ class FakeStore:
         return self.hits[: n_results or len(self.hits)]
 
     def count(self) -> int:
-        return len(self.hits)
+        return self.count_value
 
     def stats(self) -> CollectionStats:
         return CollectionStats(count=len(self.hits), collection="fake")
@@ -158,6 +169,16 @@ def test_index_result_embeds_all_chunks() -> None:
     assert len(store.replaced[0][1]) == 2
 
 
+def test_index_result_skips_already_indexed_document() -> None:
+    embedder = FakeEmbedder()
+    store = FakeStore([], has_document=True)
+    service = RagService(embedder=embedder, reranker=FakeReranker(), store=store)
+    report = service.index_result(make_result())
+    assert report.indexed == 0
+    assert embedder.calls == []
+    assert store.replaced == []
+
+
 def test_query_reranks_and_limits() -> None:
     hits = [
         make_hit("a-c0", "unrelated text", 0.8),
@@ -173,6 +194,22 @@ def test_query_reranks_and_limits() -> None:
     assert [hit.chunk_id for hit in result.hits] == ["a-c1"]
     assert result.hits[0].score == pytest.approx(0.9)
     assert reranker.calls == [("force", ["unrelated text", "good force text"])]
+
+
+def test_query_skips_reranker_for_small_index() -> None:
+    hits = [
+        make_hit("a-c0", "unrelated text", 0.8),
+        make_hit("a-c1", "good force text", 0.2),
+    ]
+    reranker = FakeReranker()
+    service = RagService(
+        embedder=FakeEmbedder(),
+        reranker=reranker,
+        store=FakeStore(hits, count=2),
+    )
+    result = service.query("force", top_k=2, candidates=2)
+    assert not result.reranked
+    assert reranker.calls == []
 
 
 def test_query_can_skip_reranker() -> None:

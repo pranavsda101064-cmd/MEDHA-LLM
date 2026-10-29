@@ -17,9 +17,12 @@ from medha.lesson import (
     GenerationRequest,
     LessonCache,
     LessonGenerator,
+    StepEvent,
     estimate_duration_s,
     extract_json_object,
     llm_lesson_schema,
+    llm_outline_schema,
+    llm_step_lesson_schema,
     make_lesson_id,
     parse_lesson_json,
     sanitize_latex,
@@ -151,6 +154,45 @@ class FakeRetriever:
         self.queries.append(text)
         self.rerank_calls.append(rerank)
         return SimpleNamespace(hits=self.hits, reranked=self.reranked)
+
+
+class OomRetriever:
+    def __init__(self) -> None:
+        self.closed = 0
+
+    def close(self) -> None:
+        self.closed += 1
+
+    def query(
+        self,
+        _text: str,
+        *,
+        top_k: int | None = None,
+        candidates: int | None = None,
+        rerank: bool = True,
+    ) -> SimpleNamespace:
+        del top_k, candidates, rerank
+        raise OSError(22, "The paging file is too small for this operation")
+
+
+def test_generate_falls_back_when_retrieval_runs_out_of_memory(
+    tmp_path: Path,
+) -> None:
+    client = FakeClient([json.dumps(valid_payload())])
+    retriever = OomRetriever()
+    generator = LessonGenerator(
+        client=client,
+        retriever=retriever,
+        cache=LessonCache(tmp_path),
+    )
+    result = generator.generate(
+        GenerationRequest(topic="Newton's second law", steps=2),
+        use_cache=False,
+    )
+
+    assert len(result.lesson.steps) == 2
+    assert any("out of memory" in warning for warning in result.warnings)
+    assert retriever.closed == 1
 
 
 def test_generate_grounds_prompt_and_fills_meta(tmp_path: Path) -> None:
@@ -316,6 +358,99 @@ def test_missing_fields_are_defaulted(tmp_path: Path) -> None:
     )
     assert result.lesson.title == "Force and motion"
     assert result.lesson.target_concept == "force-and-motion"
+
+
+def test_generate_stepwise_emits_one_step_at_a_time(tmp_path: Path) -> None:
+    outline = {
+        "title": "Newton's Second Law",
+        "target_concept": "newton_second_law",
+        "steps": [
+            {"concept": "force and acceleration"},
+            {"concept": "mass changes acceleration"},
+        ],
+    }
+    first = valid_payload()
+    first["steps"] = first["steps"][:1]
+    second = valid_payload()
+    second["steps"] = second["steps"][1:]
+    client = FakeClient([json.dumps(outline), json.dumps(first), json.dumps(second)])
+    retriever = FakeRetriever([make_hit()])
+    generator = LessonGenerator(
+        client=client,
+        retriever=retriever,
+        cache=LessonCache(tmp_path),
+    )
+    events: list[StepEvent] = []
+    closed_at_steps: list[int] = []
+
+    def on_step(event: StepEvent) -> None:
+        events.append(event)
+        closed_at_steps.append(retriever.closed)
+
+    result = generator.generate_stepwise(
+        GenerationRequest(topic="Newton's second law", subject="physics", steps=2),
+        on_step,
+        use_cache=False,
+    )
+
+    assert closed_at_steps == [1, 1]
+    assert [event.index for event in events] == [0, 1]
+    assert [len(event.lesson.steps) for event in events] == [1, 2]
+    assert events[0].step.id == "s1"
+    assert events[1].step.id == "s2"
+    assert len(result.lesson.steps) == 2
+    assert result.lesson.steps[0].id == "s1"
+    assert result.lesson.steps[1].id == "s2"
+    actions = [
+        action.id for step in result.lesson.steps for action in step.board
+    ]
+    assert len(actions) == len(set(actions))
+    assert client.calls[0]["schema"] == llm_outline_schema()
+    assert client.calls[1]["schema"] == llm_step_lesson_schema()
+    assert client.calls[2]["schema"] == llm_step_lesson_schema()
+    assert retriever.queries == [
+        "Newton's second law",
+        "Newton's second law force and acceleration",
+        "Newton's second law mass changes acceleration",
+    ]
+    assert retriever.closed == 1
+    assert result.lesson.meta.sources
+
+
+def test_generate_stepwise_continues_when_retrieval_runs_out_of_memory(
+    tmp_path: Path,
+) -> None:
+    outline = {
+        "title": "Newton's Second Law",
+        "target_concept": "newton_second_law",
+        "steps": [
+            {"concept": "force and acceleration"},
+            {"concept": "mass changes acceleration"},
+        ],
+    }
+    first = valid_payload()
+    first["steps"] = first["steps"][:1]
+    second = valid_payload()
+    second["steps"] = second["steps"][1:]
+    client = FakeClient([json.dumps(outline), json.dumps(first), json.dumps(second)])
+    retriever = OomRetriever()
+    generator = LessonGenerator(
+        client=client,
+        retriever=retriever,
+        cache=LessonCache(tmp_path),
+    )
+    events: list[StepEvent] = []
+
+    result = generator.generate_stepwise(
+        GenerationRequest(topic="Newton's second law", steps=2),
+        events.append,
+        use_cache=False,
+    )
+
+    assert [event.index for event in events] == [0, 1]
+    assert len(result.lesson.steps) == 2
+    assert any("out of memory" in warning for warning in result.warnings)
+    assert retriever.closed == 1
 
 
 def test_parse_json_fences_and_braces() -> None:

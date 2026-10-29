@@ -48,6 +48,7 @@ class OllamaClient:
             "top_p": config.OLLAMA_TOP_P,
             "repeat_penalty": config.OLLAMA_REPEAT_PENALTY,
             "num_ctx": profile.num_ctx,
+            "num_gpu": profile.num_gpu,
             "num_predict": config.OLLAMA_NUM_PREDICT,
             "seed": config.OLLAMA_SEED,
         }

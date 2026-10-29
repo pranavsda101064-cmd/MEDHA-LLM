@@ -1,4 +1,4 @@
-"""Indic speech selection, cache separation, and optional-dependency fallback."""
+"""English audio selection, cache separation, and optional Indic fallback."""
 
 from __future__ import annotations
 
@@ -39,25 +39,31 @@ def test_cache_separates_engines(tmp_path: Path) -> None:
     assert cache.load("hello", "voice", 1.0, 24000, "indic-parler") is None
 
 
-class FakeIndicEngine:
-    engine_id = "fake-indic"
-    voice = "indic-hi"
+class FakeKokoroEngine:
+    engine_id = "fake-kokoro"
     speed = 1.0
 
-    def __init__(self, language: str, **kwargs: object) -> None:
-        self.language = language
+    def __init__(self, *, voice: str, speed: float) -> None:
+        self.voice = voice
+        self.speed = speed
 
     def synthesize(self, text: str) -> np.ndarray:
         return np.ones(240, dtype=np.float32)
 
 
-def test_indic_lesson_selects_indic_engine(
+class _UnexpectedIndicEngine:
+    def __init__(self, **_kwargs: object) -> None:
+        raise AssertionError("Indic speech is deferred; lessons must use Kokoro")
+
+
+def test_translated_lesson_keeps_english_audio(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     lesson = _lesson().model_copy(update={"language": "hi"})
-    monkeypatch.setattr("medha.tts.indic.IndicParlerEngine", FakeIndicEngine)
+    monkeypatch.setattr("medha.tts.kokoro.KokoroEngine", FakeKokoroEngine)
+    monkeypatch.setattr("medha.tts.indic.IndicParlerEngine", _UnexpectedIndicEngine)
 
     track = synthesize_lesson(lesson, use_cache=False)
 
-    assert track.voice == "indic-hi"
+    assert track.voice == config.KOKORO_VOICE
     assert track.sample_rate == config.TTS_SAMPLE_RATE

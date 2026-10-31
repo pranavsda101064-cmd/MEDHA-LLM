@@ -1,0 +1,259 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "explain-enthalpy-with-graphs-17fb51dc",
+  "title": "Understanding Enthalpy with Graphs",
+  "subject": "physics",
+  "target_concept": "explain-enthalpy-with-graphs",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Enthalpy",
+      "narration": "Enthalpy is the total heat content of a system at constant pressure. It combines internal energy and the product of pressure and volume. We'll show this with a simple graph of enthalpy vs. temperature.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Enthalpy",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "H = U + P V",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a2",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Internal Energy",
+      "narration": "Internal energy is the total energy of a system due to the motion and interactions of its particles. It includes kinetic and potential energy at the molecular level, and is often represented as a function of temperature and volume.",
+      "board": [
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Internal Energy (U)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "U = U(\\mathrm{temp}, \\mathrm{vol})",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a5",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "Heat Capacity",
+      "narration": "Heat capacity tells us how much heat is needed to raise the temperature of a substance. It's the slope of the temperature vs. heat graph, where a steeper slope means less heat capacity.",
+      "board": [
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Heat Capacity",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "C = \\frac{Q}{\\Delta T}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a8",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Phase Change Graph",
+      "narration": "During a phase change, like melting or boiling, temperature stays constant even though heat is added. The energy goes into breaking bonds, not raising temperature, so the graph shows a flat line at constant temperature.",
+      "board": [
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Phase Change: Constant Temp",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\Delta H = m \\cdot L",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Enthalpy-Volume Diagram",
+      "narration": "On an enthalpy-volume diagram, enthalpy is plotted on the y-axis and volume on the x-axis. This shows how energy changes with volume during processes like expansion or compression. For example, in a gas expanding, enthalpy increases as volume grows, reflecting work and heat transfer.",
+      "board": [
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "H vs V",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": null,
+    "style_id": "default",
+    "created_at": "2026-10-29T23:54:56+00:00",
+    "estimated_duration_s": 74.1,
+    "sources": [],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

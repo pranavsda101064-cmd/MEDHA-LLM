@@ -5,6 +5,15 @@ components. Full license texts are in `LICENSES/`; model weight license
 snapshots are in `MODEL_LICENSES/`. Model weights are not distributed with the
 repository; `tools/fetch_models.py` fetches them under their original terms.
 
+## Frontend
+
+- **Landing page** (`frontend/`): React + Vite landing adapted from
+  [dishaaaaaaa14/dishaui](https://github.com/dishaaaaaaa14/dishaui), licensed
+  under the Apache License 2.0 (the same license as this repository). Its npm
+  dependencies listed in `frontend/package-lock.json` keep their own licenses
+  and are not redistributed (`node_modules/` is ignored); `frontend/dist/`
+  holds the built, minified bundle used at runtime.
+
 ## Font data
 
 - **Hershey Futural** (`assets/fonts/futural.jhf`, converted to
@@ -12,6 +21,10 @@ repository; `tools/fetch_models.py` fetches them under their original terms.
   commercial or otherwise, with the acknowledgements in
   `LICENSES/LicenseRef-Hershey.txt`. The data may not be converted to the U.S.
   NTIS format. The GPLv2+ `libhersheyfont` code is not used.
+- **Gochi Hand** (`assets/fonts/GochiHand-Regular.ttf`): handwritten labels for
+  the Studio notice-board menu items. Copyright 2011 Huerta Tipografica, with
+  Reserved Font Names "Gochi" and "Gochi Hand"; licensed under the SIL Open
+  Font License 1.1 (`LICENSES/OFL-1.1.txt`).
 
 ## Models
 

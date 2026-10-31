@@ -1,0 +1,516 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "corrossion-f54f8f8f",
+  "title": "Understanding Corrosion: Electrochemical Processes",
+  "subject": "chemistry",
+  "target_concept": "corrossion",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "define corrosion",
+      "narration": "Corrosion is a natural process where materials, especially metals, degrade due to chemical or electrochemical reactions with their environment. Examples include rusting of iron, tarnishing of silver, and patina on copper. This degradation happens when metals interact with water, oxygen, or moisture in the air.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Corrosion: Deterioration of materials due to environment",
+          "region": "title",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Examples: Rust, Tarnish, Patina",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.22,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "electrochemical theory of corrosion",
+      "narration": "Electrochemical corrosion occurs when metals are exposed to water and oxygen. In iron, this creates an anode and a cathode on the surface. The anode loses electrons and forms iron ions, while oxygen at the cathode accepts electrons and forms hydroxide ions.",
+      "board": [
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "Fe \\rightarrow Fe^{2+} + 2e^-",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "O_2 + 2H_2O + 4e^- \\rightarrow 4OH^-",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.38,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "formation of rust",
+      "narration": "Iron ions react with hydroxide ions to form iron hydroxide, which then oxidizes in the presence of oxygen and water to form rust. Rust is hydrated iron(III) oxide, Fe₂O₃ * nH₂O. This process happens slowly over time in humid air.",
+      "board": [
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "2Fe^{2+} + 4OH^- \\rightarrow 2Fe(OH)_2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.54,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "2Fe(OH)_2 + O_2 + nH_2O \\rightarrow Fe_2O_3 \\cdot nH_2O",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.54,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "black rust formation",
+      "narration": "When oxygen is limited, iron hydroxide forms black rust, Fe₃O₄ * 3H₂O. This occurs in sealed or low-oxygen environments, like under oil or in damp crevices. The reaction is slower and produces a darker, less stable product.",
+      "board": [
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "3Fe(OH)_2 + \\frac{1}{2}O_2 \\rightarrow Fe_3O_4 \\cdot 3H_2O",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.7,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Limited O₂ -> Black Rust",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.7,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "pitting corrosion",
+      "narration": "Pitting corrosion happens when a small particle like dust or water droplet traps low oxygen on a metal surface. This creates an anode with low oxygen and a cathode with high oxygen, forming an electrochemical cell that drives localized corrosion.",
+      "board": [
+        {
+          "id": "auto_clear_s5",
+          "duration_ms": 120,
+          "start": {
+            "sentence": 0,
+            "char": 0
+          },
+          "op": "clear"
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Pitting Corrosion: Localized hole",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.86,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Low O₂ -> Anode",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "High O₂ -> Cathode",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s6",
+      "concept": "galvanic corrosion",
+      "narration": "When two dissimilar metals touch in a wet environment, the one with lower electrode potential (more negative) becomes the anode and corrodes. Iron (-0.44V) corrodes when connected to copper (+0.34V), while copper is protected.",
+      "board": [
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "Iron (-0.44V) \\mathrm{ corrodes}",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.54,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "Copper (+0.34V) \\mathrm{ protected}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.54,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Anode: Iron (corrodes)",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.18,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a17",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Cathode: Copper (protected)",
+          "region": "auto",
+          "rect": {
+            "x": 0.24,
+            "y": 0.38,
+            "w": 0.18,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s7",
+      "concept": "types of corrosion",
+      "narration": "Corrosion types include pitting, galvanic, and uniform corrosion. Pitting occurs in crevices, galvanic when dissimilar metals touch, and uniform corrosion spreads evenly. Each has different causes and prevention methods.",
+      "board": [
+        {
+          "id": "a18",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Types of Corrosion",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.7,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a19",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Pitting -> Crevices",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.7,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a20",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Galvanic -> Dissimilar Metals",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s8",
+      "concept": "corrosion control",
+      "narration": "To prevent corrosion, use protective coatings, control moisture, apply cathodic protection, or avoid contact between dissimilar metals. Regular inspection and maintenance are key to extending material life.",
+      "board": [
+        {
+          "id": "auto_clear_s8",
+          "duration_ms": 120,
+          "start": {
+            "sentence": 0,
+            "char": 0
+          },
+          "op": "clear"
+        },
+        {
+          "id": "a21",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Corrosion Control Methods",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.86,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a22",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Coatings, Dryness, Cathodic Protection, Avoid Metal Contact",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.86,
+            "w": 0.36,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": "f38a96a54ca17a6ac49c8e0b40fe0286d76c222b3986d73b932034614a42aec6",
+    "style_id": "default",
+    "created_at": "2026-10-29T13:10:43+00:00",
+    "estimated_duration_s": 115.4,
+    "sources": [
+      "Corrosion-Module 4.pdf, pages 1-2 > CORROSION CHEMISTRY",
+      "Corrosion-Module 4.pdf, page 2 > c) In de-aerated and acidic environment:",
+      "Corrosion-Module 4.pdf, pages 3-4 > Types of Corrosion",
+      "Corrosion-Module 4.pdf, pages 2-3 > Types of Corrosion"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

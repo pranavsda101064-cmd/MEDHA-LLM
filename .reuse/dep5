@@ -27,6 +27,18 @@ Files: assets/fonts/hershey.json
 Copyright: A. V. Hershey; James Hurt; 2026 Medha contributors
 License: LicenseRef-Hershey
 
+Files: assets/fonts/GochiHand-Regular.ttf
+Copyright: 2011, Huerta Tipografica (www.huertatipografica.com.ar), with Reserved Font Names "Gochi" and "Gochi Hand"
+License: OFL-1.1
+
+Files: assets/ui/*.png
+Copyright: 2026 Medha contributors
+License: Apache-2.0
+
+Files: LICENSES/OFL-1.1.txt
+Copyright: 2011, Huerta Tipografica (www.huertatipografica.com.ar), with Reserved Font Names "Gochi" and "Gochi Hand"
+License: OFL-1.1
+
 Files: assets/voices/**
 Copyright: 2026 Medha contributors
 License: Apache-2.0

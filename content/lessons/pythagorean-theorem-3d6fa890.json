@@ -1,0 +1,348 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "pythagorean-theorem-3d6fa890",
+  "title": "Pythagorean Theorem",
+  "subject": "math",
+  "target_concept": "pythagorean-theorem",
+  "difficulty": "beginner",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "introduce the theorem",
+      "narration": "The Pythagorean Theorem helps find the length of a side in a right triangle. It says that the square of the longest side equals the sum of the squares of the other two sides. This is useful for solving real-world problems like measuring distances.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Pythagorean Theorem",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c^2 = a^2 + b^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "explain the parts",
+      "narration": "In a right triangle, 'c' is the hypotenuse, the longest side opposite the right angle. 'a' and 'b' are the legs, the other two sides. The theorem connects these three sides mathematically.",
+      "board": [
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Right Triangle",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "c = hypotenuse",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "a and b = legs",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "show a worked example",
+      "narration": "Suppose a triangle has legs of 3 units and 4 units. Then the hypotenuse is found using c^2 = 3^2 + 4^2. That gives c^2 = 9 + 16 = 25, so c = 5 units.",
+      "board": [
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c^2 = 3^2 + 4^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.35,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c^2 = 9 + 16 = 25",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.49,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c = \\sqrt{25} = 5",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.63,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "apply to a real problem",
+      "narration": "If a ladder is 10 feet long and leans against a wall with its base 6 feet from the wall, how high does it reach? Use c = 10, a = 6, then b^2 = c^2 - a^2 = 100 - 36 = 64, so b = 8 feet.",
+      "board": [
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Ladder Problem",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "b^2 = 10^2 - 6^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.35,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "b^2 = 100 - 36 = 64",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.49,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "b = \\sqrt{64} = 8",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.63,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "check understanding",
+      "narration": "Now you try: a triangle has legs 5 and 12. What is the hypotenuse? Answer: c^2 = 25 + 144 = 169, so c = 13. That matches the theorem.",
+      "board": [
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Try This!",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c^2 = 5^2 + 12^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.35,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c^2 = 25 + 144 = 169",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.49,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a17",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "c = \\sqrt{169} = 13",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.63,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a18",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a17",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b8-v3",
+    "material_hash": "ff57a04c9de85e569efd0aa6e605b1b13909dd0158a2e463592ff445c9bdf42a",
+    "style_id": "default",
+    "created_at": "2026-10-28T11:38:51+00:00",
+    "estimated_duration_s": 71.0,
+    "sources": [
+      "sample.pdf, pages 1-2 > Newton's Laws of Motion",
+      "sample.pptx, slides 1-3 > Newton's Second Law"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

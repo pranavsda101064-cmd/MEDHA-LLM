@@ -1,0 +1,392 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "newton-s-second-law-f313d868",
+  "title": "Newton's Second Law of Motion",
+  "subject": "physics",
+  "target_concept": "newton-s-second-law",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Net force",
+      "narration": "When objects move, a net force is the total force acting on them. This net force causes the object to accelerate, not just any single force.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Net Force",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "F_{\\mathrm{net}} = m a",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a2",
+          "color": "yellow",
+          "width": 6.0
+        },
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Total force causes acceleration",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": {
+        "question": "What happens when there is no net force on an object?",
+        "expected": "The object does not accelerate.",
+        "hints": [
+          "No net force means no change in motion."
+        ]
+      }
+    },
+    {
+      "id": "s2",
+      "concept": "Mass",
+      "narration": "Mass is a measure of how much matter is in an object. It is measured in kilograms and remains constant regardless of location. In Newton's second law, mass appears in the denominator, so larger mass means smaller acceleration for the same force.",
+      "board": [
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Mass",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "m \\mathrm{ in kg}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "constant for an object",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "acceleration",
+      "narration": "Acceleration is how fast an object's velocity changes over time. It's measured in metres per second squared, or m/s^2. For example, if a car speeds up from 0 to 10 m/s in 2 seconds, its acceleration is 5 m/s^2.",
+      "board": [
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Acceleration",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "a = \\frac{F}{m}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "m/s^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Newton's second law equation",
+      "narration": "The equation for Newton's second law is F = m a. Force equals mass times acceleration. This shows how net force and mass determine an object's acceleration.",
+      "board": [
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "F = m a",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Force = mass times acceleration",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a11",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Unit consistency",
+      "narration": "Always check that units match in Newton's second law. Force is in newtons (N), mass in kilograms (kg), and acceleration in metres per second squared (m/s^2). Using consistent units ensures correct calculations and valid results.",
+      "board": [
+        {
+          "id": "auto_clear_s5",
+          "duration_ms": 120,
+          "start": {
+            "sentence": 0,
+            "char": 0
+          },
+          "op": "clear"
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Unit Consistency",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.18,
+            "w": 0.4,
+            "h": 0.08
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "F (N) = m (kg) \\times a (m/s^2)",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.28,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a15",
+          "color": "yellow",
+          "width": 6.0
+        },
+        {
+          "id": "a17",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Check units: N, kg, m/s^2",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.28,
+            "w": 0.3,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": "b4b3bdf27429ccd1dbf0e13a03533fa228527f7641c24fd67d1787b1ede33a0f",
+    "style_id": "default",
+    "created_at": "2026-10-29T18:08:35+00:00",
+    "estimated_duration_s": 70.6,
+    "sources": [
+      "sample.pdf, pages 1-2 > Newton's Laws of Motion",
+      "sample.pptx, slides 1-3 > Newton's Second Law",
+      "Sensors Module 4.pdf, pages 8-9 > Applications:",
+      "Sensors Module 4.pdf, pages 2-3 > Theory:",
+      "Corrosion-Module 4.pdf, pages 2-3 > Types of Corrosion",
+      "Corrosion-Module 4.pdf, pages 1-2 > CORROSION CHEMISTRY",
+      "Sensors Module 4.pdf, pages 3-4 > (a) Movement of ions towards cathode & anode"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "permutation-and-combination-050ebebd",
+  "title": "Permutation and Combination",
+  "subject": "math",
+  "target_concept": "permutation-and-combination",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Permutation",
+      "narration": "A permutation is an arrangement of objects in a specific order. For example, arranging 3 books on a shelf: the order matters, so 3! = 3 times 2 times 1 = 6 different arrangements.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Permutation",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "P(n) = n!",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Order matters in permutations.",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.08
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Combination",
+      "narration": "Combination is when order does not matter. For example, choosing 2 people from 4, the group {A,B} is the same as {B,A}.",
+      "board": [
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Combination: order does not matter",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "C(n,r) = \\frac{n!}{r!(n-r)!}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a5",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "Factorial notation",
+      "narration": "Factorial notation means multiplying a number by all the positive integers less than it. For example, 5! = 5 times 4 times 3 times 2 times 1 = 120. It's used to count arrangements in permutations and combinations.",
+      "board": [
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Factorial Notation",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "5! = 5 \\times 4 \\times 3 \\times 2 \\times 1",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Used in counting arrangements",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.46,
+            "w": 0.4,
+            "h": 0.08
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Permutation formula",
+      "narration": "Permutation is the arrangement of objects in a specific order. The formula for permutation of n objects taken r at a time is n! / (n-r)!.",
+      "board": [
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "P(n,r) = \\frac{n!}{(n-r)!}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Order matters in permutation.",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Combination formula",
+      "narration": "Combination formula is used when order does not matter. It is written as C(n,r) = n! / [r! (n-r)!]. For example, choosing 2 items from 5 is C(5,2) = 5! / [2! (5-2)!] = 10.",
+      "board": [
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "C(n,r) = \\frac{n!}{r!(n-r)!}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Example: C(5,2) = 10",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a12",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": "b4b3bdf27429ccd1dbf0e13a03533fa228527f7641c24fd67d1787b1ede33a0f",
+    "style_id": "default",
+    "created_at": "2026-10-31T13:05:10+00:00",
+    "estimated_duration_s": 60.6,
+    "sources": [
+      "Sensors Module 4.pdf, pages 3-4 > (a) Movement of ions towards cathode & anode",
+      "sample.pdf, pages 1-2 > Newton's Laws of Motion",
+      "Sensors Module 4.pdf, pages 2-3 > Theory:",
+      "Sensors Module 4.pdf, pages 5-6 > Procedure:",
+      "Corrosion-Module 4.pdf, pages 2-3 > Types of Corrosion",
+      "Corrosion-Module 4.pdf, pages 1-2 > CORROSION CHEMISTRY",
+      "sample.pptx, slides 1-3 > Newton's Second Law",
+      "Sensors Module 4.pdf, pages 10-11 > BIOSENSORS FOR GLUCOSE DETECTION",
+      "Corrosion-Module 4.pdf, pages 8-9 > Weight loss method for Measuring Uniform Corrosion"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

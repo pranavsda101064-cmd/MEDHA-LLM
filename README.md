@@ -71,6 +71,21 @@ The same entry points work without PowerShell wrappers:
 .\.venv\Scripts\python.exe -m medha --version
 ```
 
+### Desktop shortcut
+
+Create a desktop and Start Menu shortcut:
+
+```powershell
+.\scripts\install_shortcut.ps1
+```
+
+The shortcut starts Ollama, opens Medha Studio, and keeps the PowerShell console hidden.
+Search for **Medha Studio** in the Start Menu or double-click the desktop icon. Right-click
+the shortcut and choose **Pin to taskbar** if you want one-click access from the taskbar.
+
+If the project folder is moved, run `install_shortcut.ps1` again to update the shortcut path.
+Use `-NoDesktop` or `-NoStartMenu` to skip either location.
+
 ## Demo
 
 ```powershell

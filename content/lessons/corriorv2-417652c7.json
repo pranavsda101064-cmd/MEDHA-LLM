@@ -1,0 +1,614 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "corriorv2-417652c7",
+  "title": "Corrosion Rate Calculation and Protection Methods",
+  "subject": "chemistry",
+  "target_concept": "corriorv2",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Define corrosion",
+      "narration": "Corrosion is a natural process where metals degrade due to chemical or electrochemical reactions with their environment. For example, iron rusts when exposed to water and oxygen. This degradation leads to loss of material and structural integrity over time.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Corrosion",
+          "region": "title",
+          "rect": {
+            "x": 0.06,
+            "y": 0.08,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Deterioration of metals due to environment",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.24,
+            "w": 0.48,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Examples: Rusting, tarnishing, patina",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.4,
+            "w": 0.48,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Electrochemical theory of corrosion",
+      "narration": "In wet corrosion, metal surfaces react with water and oxygen. Iron acts as an anode, releasing electrons and forming Fe^2⁺ ions. These reactions occur in an electrochemical cell where iron is oxidized and oxygen is reduced.",
+      "board": [
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "Fe \\rightarrow Fe^{2+} + 2e^-",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "O_2 + 2H_2O + 4e^- \\rightarrow 4OH^-",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Iron oxidized at anode",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.54,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "Differential corrosion",
+      "narration": "When two different metals are in contact, the one with lower electrode potential corrodes. Iron (-0.44V) corrodes when connected to copper (+0.34V) because iron is more reactive.",
+      "board": [
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Metal with lower potential corrodes",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Iron (-0.44V) corrodes, copper (+0.34V) protected",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Anode: Iron",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Corrosion rate formula",
+      "narration": "The corrosion rate (CPR) is calculated using CPR = k times W / (ρ times A times T). Here, k is a constant, W is weight loss, ρ is density, A is area, and T is time in hours.",
+      "board": [
+        {
+          "id": "auto_clear_s4",
+          "duration_ms": 120,
+          "start": {
+            "sentence": 0,
+            "char": 0
+          },
+          "op": "clear"
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "CPR = \\frac{k \\cdot W}{\\rho \\cdot A \\cdot T}",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "k: constant (mm/year or mpy)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.22,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "W: weight loss (g)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.38,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "ρ: density (g/cm^3)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.54,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Calculate CPR for brass and steel",
+      "narration": "For a brass pipe with 0.5g weight loss, density 8.5g/cm^3, area 10cm^2, and time 1000 hours, use CPR = k times W/(ρ times A times T). With k=100, CPR = 100 times 0.5/(8.5 times 10 times 1000) = 0.000588 mm/year.",
+      "board": [
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "CPR = \\frac{100 \\cdot 0.5}{8.5 \\cdot 10 \\cdot 1000}",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a17",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "= 0.000588 \\mathrm{ mm/year}",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a18",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Result: Low corrosion rate",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s6",
+      "concept": "Protection methods: Sacrificial anode",
+      "narration": "Sacrificial anodes, like zinc, are attached to metal surfaces to corrode instead of the protected metal. Zinc has a lower potential than iron and corrodes preferentially, protecting iron structures.",
+      "board": [
+        {
+          "id": "a19",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Zinc acts as sacrificial anode",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a21",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Zinc corrodes, iron protected",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s7",
+      "concept": "Protection methods: Coatings and inhibitors",
+      "narration": "Coatings like paint or oil prevent contact with moisture. Chemical inhibitors form protective layers on metal surfaces. These methods reduce electrochemical reactions and slow corrosion.",
+      "board": [
+        {
+          "id": "auto_clear_s7",
+          "duration_ms": 120,
+          "start": {
+            "sentence": 0,
+            "char": 0
+          },
+          "op": "clear"
+        },
+        {
+          "id": "a22",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Coatings: Paint, oil, grease",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a23",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Inhibitors: Form protective layer",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.22,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a24",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Reduce reaction with environment",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.38,
+            "w": 0.2,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s8",
+      "concept": "Summary of corrosion and protection",
+      "narration": "Corrosion is a natural degradation process driven by electrochemical reactions. Differential corrosion occurs between metals with different potentials. Protection methods include sacrificial anodes, coatings, and chemical inhibitors to prevent or slow material loss.",
+      "board": [
+        {
+          "id": "a25",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Corrosion: Natural degradation",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a26",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Protection: Anodes, coatings, inhibitors",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a27",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Prevents material loss",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": "f38a96a54ca17a6ac49c8e0b40fe0286d76c222b3986d73b932034614a42aec6",
+    "style_id": "default",
+    "created_at": "2026-10-29T13:34:41+00:00",
+    "estimated_duration_s": 108.5,
+    "sources": [
+      "Corrosion-Module 4.pdf, pages 10-11 > CPR = 87.6 X 485 X 1000 7.9 X 100 X 6.45 X 365 X 24",
+      "Corrosion-Module 4.pdf, pages 6-7 > Explain the Sacrificial anode method.",
+      "Corrosion-Module 4.pdf, pages 1-2 > CORROSION CHEMISTRY",
+      "Corrosion-Module 4.pdf, pages 2-3 > Types of Corrosion"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

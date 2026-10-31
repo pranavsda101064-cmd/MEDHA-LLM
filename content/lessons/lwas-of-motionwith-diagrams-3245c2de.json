@@ -1,0 +1,339 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "lwas-of-motionwith-diagrams-3245c2de",
+  "title": "Laws of Motion with Diagrams",
+  "subject": "physics",
+  "target_concept": "lwas-of-motionwith-diagrams",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Newton's First Law",
+      "narration": "An object at rest stays at rest, and an object in motion stays in motion unless acted upon by an unbalanced force. This is called inertia. The law shows that forces are needed to change motion, not to maintain it.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Newton's First Law",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "An object at rest stays at rest.",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "An object in motion stays in motion.",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "No unbalanced force -> no change in motion.",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.54,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Inertia",
+      "narration": "Inertia is the tendency of an object to resist changes in its motion. It depends only on mass-more mass means more inertia. For example, a heavy truck is harder to stop than a bicycle.",
+      "board": [
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Inertia",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "I \\propto m",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a6",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "Newton's Second Law",
+      "narration": "When a force acts on an object, it accelerates in the direction of the force. The acceleration is directly proportional to the net force and inversely proportional to the mass. For example, pushing a shopping cart with twice the force doubles its acceleration if mass stays the same.",
+      "board": [
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "a = \\frac{F_{\\mathrm{net}}}{m}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Force -> Acceleration",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a8",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Net Force Vector",
+      "narration": "The net force is the vector sum of all forces acting on an object. It determines acceleration, not just magnitude, because direction matters. For example, if two forces push at right angles, the net force is found using the Pythagorean theorem.",
+      "board": [
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Net Force Vector",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "F_{\\mathrm{net}} = \\sqrt{F_1^2 + F_2^2}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a12",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Free Body Diagram",
+      "narration": "A free body diagram shows all forces acting on an object. Draw the object as a dot, then add arrows for each force with labels like gravity or friction. The diagram helps visualize net force and motion.",
+      "board": [
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Free Body Diagram",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\vec{F}_{\\mathrm{net}} = \\sum \\vec{F}_i",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a15",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": null,
+    "style_id": "default",
+    "created_at": "2026-10-29T23:59:59+00:00",
+    "estimated_duration_s": 78.3,
+    "sources": [],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

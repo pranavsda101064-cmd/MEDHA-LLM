@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from typing import cast
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QSurfaceFormat
@@ -14,6 +15,8 @@ import config
 from medha.core.logging import setup_logging
 
 from .app import StudioWindow
+from .landing import LandingWindow
+from .theme import apply_theme
 
 ROOT = Path(__file__).resolve().parents[2]
 FALLBACK_LESSON = ROOT / "spec" / "board-action" / "v1" / "examples" / "newton.json"
@@ -21,6 +24,7 @@ FALLBACK_LESSON = ROOT / "spec" / "board-action" / "v1" / "examples" / "newton.j
 
 def _configure_gl() -> None:
     QApplication.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL, True)
+    QApplication.setAttribute(Qt.ApplicationAttribute.AA_ShareOpenGLContexts, True)
     fmt = QSurfaceFormat()
     fmt.setVersion(3, 3)
     fmt.setProfile(QSurfaceFormat.OpenGLContextProfile.CoreProfile)
@@ -48,9 +52,33 @@ def main(argv: list[str] | None = None) -> int:
     config.ensure_dirs()
     setup_logging()
     _configure_gl()
-    app = QApplication.instance() or QApplication(sys.argv[:1])
+    app = cast(QApplication, QApplication.instance() or QApplication(sys.argv[:1]))
     app.setApplicationName(f"{config.APP_NAME} Studio")
     app.setOrganizationName(config.APP_NAME)
+    apply_theme(app)
+
+    interactive = args.lesson is None and not args.smoke and args.screenshot is None
+    if interactive:
+        # Landing first; the Studio window is created lazily on Enter so the
+        # splash shows up instantly (no library scan / TTS warmup yet).
+        landing = LandingWindow()
+        studio: StudioWindow | None = None
+
+        def enter_studio() -> None:
+            nonlocal studio
+            if studio is None:
+                studio = StudioWindow(tts=not args.no_tts)
+                studio.show()
+                studio.raise_()
+                studio.activateWindow()
+            landing.close()
+
+        landing.entered.connect(enter_studio)
+        landing.showFullScreen()
+        landing.raise_()
+        landing.activateWindow()
+        return app.exec()
+
     window = StudioWindow(tts=not args.no_tts)
     window.show()
     window.raise_()

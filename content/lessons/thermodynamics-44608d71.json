@@ -1,0 +1,326 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "thermodynamics-44608d71",
+  "title": "Thermodynamics Lesson",
+  "subject": "physics",
+  "target_concept": "thermodynamics",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Internal energy",
+      "narration": "Internal energy is the total energy of all the molecules in a system, including their kinetic and potential energies. It depends only on the state of the system, not on how it got there. For example, a hot cup of coffee has more internal energy than a cold one.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Internal Energy",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "U = \\mathrm{kinetic} + \\mathrm{potential}",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "State-dependent only",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a2",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Heat transfer",
+      "narration": "Heat transfer occurs when there's a temperature difference between two objects. It moves from hotter to colder regions until equilibrium is reached. This flow can happen through conduction, convection, or radiation.",
+      "board": [
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Heat Transfer",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "Q = m c \\Delta T",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "bullet_list",
+          "items": [
+            "Conduction: direct contact",
+            "Convection: fluid movement",
+            "Radiation: electromagnetic waves"
+          ],
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.54,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "item_gap": 0.07,
+          "speed": 0.045
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a6",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "First law of thermodynamics",
+      "narration": "The first law says energy can't be created or destroyed, only transferred. In a closed system, the change in internal energy equals heat added minus work done by the system. For example, if you compress a gas, its internal energy increases because work is done on it.",
+      "board": [
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\Delta U = Q - W",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "blue",
+          "speed": 0.06
+        },
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a9",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "Entropy",
+      "narration": "Entropy measures disorder or randomness in a system. It always increases in isolated systems, reflecting the natural tendency toward more disordered states.",
+      "board": [
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\Delta S \\geq 0",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "green",
+          "speed": 0.06
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a11",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Clausius inequality",
+      "narration": "The Clausius inequality shows that for any cyclic process, the integral of dQ over T is less than or equal to zero. This means heat transfer at a temperature is always less than or equal to the heat transfer at a higher temperature. It defines the direction of natural heat flow and links to entropy change.",
+      "board": [
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Clausius Inequality",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\oint \\frac{dQ}{T} \\leq 0",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a14",
+          "color": "yellow",
+          "width": 6.0
+        },
+        {
+          "id": "a16",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Heat flows from hot to cold",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": null,
+    "style_id": "default",
+    "created_at": "2026-10-29T23:46:28+00:00",
+    "estimated_duration_s": 80.6,
+    "sources": [],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}

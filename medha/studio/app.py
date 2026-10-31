@@ -9,10 +9,11 @@ from dataclasses import replace
 from pathlib import Path
 from typing import cast
 
-from PySide6.QtCore import Qt, QThread, QTimer, QUrl
-from PySide6.QtGui import QCloseEvent, QDesktopServices
+from PySide6.QtCore import QEvent, QObject, Qt, QThread, QTimer, QUrl
+from PySide6.QtGui import QCloseEvent, QDesktopServices, QKeyEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QApplication,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -20,6 +21,7 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QFormLayout,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -29,11 +31,13 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QSizePolicy,
     QSlider,
     QSpinBox,
     QSplitter,
     QTabWidget,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -47,6 +51,7 @@ from medha.render.timeline import CheckpointTiming
 from medha.render.widget import BoardWidget
 
 from .service import StudioOptions, StudioResult
+from .theme import SUCCESS, WARN
 from .workers import GenerateWorker, OpenWorker, VoiceTestWorker
 
 logger = logging.getLogger(__name__)
@@ -54,43 +59,6 @@ logger = logging.getLogger(__name__)
 SUBJECTS = ("math", "physics", "chemistry", "electronics", "ai", "general")
 DIFFICULTIES = ("beginner", "intermediate", "advanced")
 LANGUAGES = tuple((name, code) for code, name in config.LANGUAGE_NAMES.items())
-
-STYLE = """
-QMainWindow, QWidget { background: #0b1110; color: #e7efe9; }
-QLabel#brand { font-size: 20px; font-weight: 700; letter-spacing: 2px; }
-QLabel#subtitle { color: #7f968c; font-size: 11px; }
-QLabel#meta { color: #a8bdb3; }
-QLabel#quality { color: #a8bdb3; }
-QLabel#hint { color: #e4c07a; }
-QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox, QListWidget, QPlainTextEdit {
-    background: #111b18; border: 1px solid #263a33; border-radius: 6px;
-    padding: 6px; selection-background-color: #2f6f5e;
-}
-QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus {
-    border-color: #4f9d84;
-}
-QListWidget { min-height: 64px; }
-QPushButton {
-    background: #182622; border: 1px solid #2d493f; border-radius: 6px;
-    padding: 7px 11px; color: #dfece5;
-}
-QPushButton:hover { background: #21362f; border-color: #4f9d84; }
-QPushButton:disabled { color: #60736b; border-color: #1b2924; }
-QPushButton#primary { background: #2f6f5e; border-color: #4f9d84; font-weight: 700; }
-QPushButton#primary:hover { background: #3b8772; }
-QSlider::groove:horizontal { background: #1a2924; height: 5px; border-radius: 2px; }
-QSlider::handle:horizontal {
-    background: #71c8aa; width: 13px; margin: -5px 0; border-radius: 6px;
-}
-QFrame#panel { background: #0e1714; border: 1px solid #1d2d27; border-radius: 9px; }
-QDialog { background: #0e1714; }
-QTabWidget::pane { border: 0; }
-QTabBar::tab {
-    background: #111b18; border: 1px solid #263a33; padding: 7px 13px;
-    margin-right: 3px; border-radius: 6px;
-}
-QTabBar::tab:selected { background: #2f6f5e; border-color: #4f9d84; }
-"""
 
 
 def _normalize_answer(value: str) -> str:
@@ -222,10 +190,10 @@ class CheckpointDialog(QDialog):
         if correct:
             self.correct_submissions += 1
             self.result_label.setText("Correct. Keep going.")
-            self.result_label.setStyleSheet("color: #71c8aa;")
+            self.result_label.setStyleSheet(f"color: {SUCCESS};")
         else:
             self.result_label.setText("Not quite. Try again, use a hint, or show the answer.")
-            self.result_label.setStyleSheet("color: #e4c07a;")
+            self.result_label.setStyleSheet(f"color: {WARN};")
         if self.library is not None:
             try:
                 self.library.record_checkpoint(
@@ -241,13 +209,48 @@ class CheckpointDialog(QDialog):
             self.hint.setText(f"Expected: {self.checkpoint.expected}")
 
 
+def _labeled(caption: str, widget: QWidget) -> QWidget:
+    """Wrap a field with a caption label placed above it."""
+    wrapper = QWidget()
+    box = QVBoxLayout(wrapper)
+    box.setContentsMargins(0, 0, 0, 0)
+    box.setSpacing(2)
+    label = QLabel(caption)
+    label.setObjectName("fieldLabel")
+    box.addWidget(label)
+    box.addWidget(widget)
+    return wrapper
+
+
+def _card(title: str, pin: str = "amber") -> tuple[QFrame, QVBoxLayout]:
+    """Create a titled card container that looks like a pinned note."""
+    frame = QFrame()
+    frame.setObjectName("card")
+    box = QVBoxLayout(frame)
+    box.setContentsMargins(14, 5, 14, 5)
+    box.setSpacing(5)
+
+    header_row = QHBoxLayout()
+    header = QLabel(title.upper())
+    header.setObjectName("sectionTitle")
+    pin_widget = QFrame()
+    pin_widget.setObjectName(f"pin{pin.capitalize()}")
+    pin_widget.setFixedSize(13, 13)
+    pin_widget.setToolTip("pinned to the board")
+    header_row.addWidget(header)
+    header_row.addStretch(1)
+    header_row.addWidget(pin_widget, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
+    box.addLayout(header_row)
+    return frame, box
+
+
 class StudioWindow(QMainWindow):
     def __init__(self, *, tts: bool = True) -> None:
         super().__init__()
         self.setWindowTitle(f"{config.APP_NAME} Studio")
         self.resize(1380, 860)
         self.setMinimumSize(1020, 680)
-        self.setStyleSheet(STYLE)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self._library_error: str | None = None
         self._settings: dict[str, object] = {}
         self.library: LessonLibrary | None = None
@@ -274,6 +277,8 @@ class StudioWindow(QMainWindow):
         self._voice_worker: VoiceTestWorker | None = None
         self._closing = False
         self._updating_slider = False
+        self._board_fullscreen = False
+        self._saved_split_sizes: list[int] = []
         self._library_lessons: dict[str, LibraryLesson] = {}
         self._timer = QTimer(self)
         self._timer.setInterval(16)
@@ -303,45 +308,232 @@ class StudioWindow(QMainWindow):
         split.addWidget(self._build_board())
         split.setStretchFactor(0, 0)
         split.setStretchFactor(1, 1)
-        split.setSizes([410, 970])
+        split.setSizes([540, 840])
+        self._splitter = split
         self.setCentralWidget(split)
         self.statusBar().showMessage("Ready. Write a topic, then Generate.")
+
+    def _build_board(self) -> QWidget:
+        page = QWidget()
+        layout = QVBoxLayout(page)
+        layout.setContentsMargins(10, 10, 10, 10)
+        frame = QFrame()
+        frame.setObjectName("panel")
+        frame_layout = QVBoxLayout(frame)
+        frame_layout.setContentsMargins(0, 0, 0, 0)
+        self.board_window = BoardWidget(frame_factory=self._render_board, parent=frame)
+        self.board_view = self.board_window
+        frame_layout.addWidget(self.board_view, 1)
+        layout.addWidget(frame, 1)
+        self._board_page = page
+
+        self._transport_bar = QFrame(page)
+        self._transport_bar.setObjectName("transportBar")
+        transport = QHBoxLayout(self._transport_bar)
+        transport.setContentsMargins(18, 12, 18, 12)
+        transport.setSpacing(14)
+        self.skip_back_button = QPushButton("−5s")
+        self.skip_back_button.setObjectName("skip")
+        self.skip_back_button.setToolTip("Back 5 seconds")
+        self.play_button = QPushButton("▶")
+        self.play_button.setObjectName("bigPlay")
+        self.play_button.setToolTip("Play / pause (space)")
+        self.skip_forward_button = QPushButton("+5s")
+        self.skip_forward_button.setObjectName("skip")
+        self.skip_forward_button.setToolTip("Forward 5 seconds")
+        self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.slider.setRange(0, 1)
+        self.slider.setEnabled(False)
+        self.time_label = QLabel("00:00 / 00:00")
+        self.time_label.setObjectName("timeLabel")
+        self.time_label.setMinimumWidth(112)
+        transport.addWidget(self.skip_back_button)
+        transport.addWidget(self.play_button)
+        transport.addWidget(self.skip_forward_button)
+        transport.addWidget(self.slider, 1)
+        transport.addWidget(self.time_label)
+        self._transport_bar.hide()
+
+        self._title_pill = QLabel("", page)
+        self._title_pill.setObjectName("titlePill")
+        self._title_pill.hide()
+        self._status_pill = QLabel("", page)
+        self._status_pill.setObjectName("statusPill")
+        self._status_pill.hide()
+
+        page.installEventFilter(self)
+
+        self.play_button.clicked.connect(self._toggle_play)
+        self.skip_back_button.clicked.connect(lambda: self._skip(-5000))
+        self.skip_forward_button.clicked.connect(lambda: self._skip(5000))
+        self.slider.sliderPressed.connect(self._slider_pressed)
+        self.slider.sliderReleased.connect(self._slider_released)
+        self._set_transport(False)
+        return page
+
+    # --- overlay layout ------------------------------------------------
+    def _layout_overlays(self) -> None:
+        if not hasattr(self, "_board_page"):
+            return
+        rect = self._board_page.rect()
+        width, height = rect.width(), rect.height()
+
+        self._transport_bar.adjustSize()
+        bar_width = min(self._transport_bar.width(), max(360, width - 40))
+        bar_height = self._transport_bar.height()
+        self._transport_bar.setGeometry(
+            (width - bar_width) // 2, height - bar_height - 26, bar_width, bar_height
+        )
+
+        self._title_pill.adjustSize()
+        pill_width = self._title_pill.width()
+        self._title_pill.setGeometry(
+            width - 16 - pill_width, 18, pill_width, self._title_pill.height()
+        )
+
+        self._status_pill.adjustSize()
+        status_width, status_height = self._status_pill.width(), self._status_pill.height()
+        self._status_pill.setGeometry(
+            (width - status_width) // 2,
+            (height - status_height) // 2 - 30,
+            status_width,
+            status_height,
+        )
+
+    def eventFilter(self, obj: QObject, event: QEvent) -> bool:
+        if obj is self._board_page and event.type() == QEvent.Type.Resize:
+            self._layout_overlays()
+            return False
+        return super().eventFilter(obj, event)
+
+    # --- board fullscreen ---------------------------------------------
+    def _toggle_fullscreen_board(self) -> None:
+        if self._board_fullscreen:
+            self._exit_board_fullscreen()
+        else:
+            self._enter_board_fullscreen()
+
+    def _enter_board_fullscreen(self) -> None:
+        if self._board_fullscreen:
+            return
+        self._board_fullscreen = True
+        self._saved_split_sizes = self._splitter.sizes()
+        self._panel.hide()
+        self.showMaximized()
+        self._layout_overlays()
+        self.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def _exit_board_fullscreen(self) -> None:
+        if not self._board_fullscreen:
+            return
+        self._board_fullscreen = False
+        self.showNormal()
+        self._panel.show()
+        if self._saved_split_sizes:
+            self._splitter.setSizes(self._saved_split_sizes)
+        self._layout_overlays()
+        self.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def _set_status_pill(self, message: str) -> None:
+        self._status_pill.setText(message)
+        self._status_pill.show()
+        self._layout_overlays()
+
+    def _hide_status_pill(self) -> None:
+        self._status_pill.hide()
+
+    # --- keyboard ------------------------------------------------------
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        key = event.key()
+        if key == Qt.Key.Key_Escape and self._board_fullscreen:
+            self._exit_board_fullscreen()
+            event.accept()
+            return
+        if key == Qt.Key.Key_Space:
+            focus = QApplication.focusWidget()
+            text_input = isinstance(
+                focus, (QLineEdit, QPlainTextEdit, QTextEdit, QSpinBox, QDoubleSpinBox)
+            )
+            if text_input or (isinstance(focus, QComboBox) and focus.isEditable()):
+                super().keyPressEvent(event)
+                return
+            self._toggle_play()
+            event.accept()
+            return
+        super().keyPressEvent(event)
 
     def _build_panel(self) -> QWidget:
         panel = QFrame()
         panel.setObjectName("panel")
-        panel.setMinimumWidth(370)
-        panel.setMaximumWidth(460)
+        panel.setFixedWidth(540)
         layout = QVBoxLayout(panel)
-        layout.setContentsMargins(18, 16, 18, 16)
+        layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(10)
 
+        header = QFrame()
+        header.setObjectName("noticeHeader")
+        header_box = QVBoxLayout(header)
+        header_box.setContentsMargins(16, 6, 16, 10)
+        header_box.setSpacing(2)
+        pin_row = QHBoxLayout()
+        left_pin = QFrame()
+        left_pin.setObjectName("pinAmber")
+        left_pin.setFixedSize(13, 13)
+        right_pin = QFrame()
+        right_pin.setObjectName("pinIndigo")
+        right_pin.setFixedSize(13, 13)
+        pin_row.addWidget(left_pin)
+        pin_row.addStretch(1)
+        pin_row.addWidget(right_pin)
+        header_box.addLayout(pin_row)
+        brand_row = QHBoxLayout()
+        text_col = QVBoxLayout()
+        text_col.setSpacing(2)
         brand = QLabel("MEDHA STUDIO")
         brand.setObjectName("brand")
         subtitle = QLabel("offline blackboard lesson director")
         subtitle.setObjectName("subtitle")
-        layout.addWidget(brand)
-        layout.addWidget(subtitle)
+        text_col.addWidget(brand)
+        text_col.addWidget(subtitle)
+        brand_row.addLayout(text_col, 1)
+        self._hamburger = QPushButton("☰")
+        self._hamburger.setObjectName("hamburger")
+        self._hamburger.setToolTip("Fullscreen blackboard (Esc to exit)")
+        self._hamburger.clicked.connect(self._toggle_fullscreen_board)
+        brand_row.addWidget(self._hamburger, 0, Qt.AlignmentFlag.AlignTop)
+        header_box.addLayout(brand_row)
+        layout.addWidget(header)
 
         self.tabs = QTabWidget()
         self.tabs.addTab(self._build_create_tab(), "Create")
         self.tabs.addTab(self._build_library_tab(), "Library")
         self.tabs.addTab(self._build_settings_tab(), "Settings")
+        # QTabBar otherwise sizes to its tabs (and stretches them), leaving the
+        # cork strip short and the paper textures misaligned. Panel is 540px
+        # wide with 16px margins and a 1px border => 506px.
+        self.tabs.tabBar().setExpanding(False)
+        self.tabs.tabBar().setMinimumWidth(506)
         layout.addWidget(self.tabs, 1)
+        self._panel = panel
         return panel
 
     def _build_create_tab(self) -> QWidget:
         tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.setContentsMargins(2, 10, 2, 2)
-        layout.setSpacing(9)
+        outer = QVBoxLayout(tab)
+        outer.setContentsMargins(2, 2, 2, 2)
+        content = QWidget()
+        content.setObjectName("lessonSurface")
+        layout = QVBoxLayout(content)
+        layout.setContentsMargins(0, 0, 4, 0)
+        layout.setSpacing(5)
 
-        form = QFormLayout()
-        form.setLabelAlignment(Qt.AlignmentFlag.AlignLeft)
-        form.setHorizontalSpacing(10)
-        form.setVerticalSpacing(7)
+        lesson_card, lesson_box = _card("Lesson", "amber")
         self.topic = QLineEdit("Newton's second law")
         self.topic.setPlaceholderText("What should the lesson teach?")
+        lesson_box.addWidget(_labeled("Topic", self.topic))
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(10)
+        grid.setVerticalSpacing(6)
         self.subject = QComboBox()
         self.subject.addItems(SUBJECTS)
         self.subject.setCurrentText("physics")
@@ -354,15 +546,16 @@ class StudioWindow(QMainWindow):
         self.steps = QSpinBox()
         self.steps.setRange(1, config.LESSON_MAX_STEPS)
         self.steps.setValue(config.LESSON_DEFAULT_STEPS)
+        grid.addWidget(_labeled("Subject", self.subject), 0, 0)
+        grid.addWidget(_labeled("Level", self.difficulty), 0, 1)
+        grid.addWidget(_labeled("Language", self.language), 1, 0)
+        grid.addWidget(_labeled("Steps", self.steps), 1, 1)
+        lesson_box.addLayout(grid)
         self.audience = QLineEdit(config.LESSON_DEFAULT_AUDIENCE)
-        form.addRow("Topic", self.topic)
-        form.addRow("Subject", self.subject)
-        form.addRow("Level", self.difficulty)
-        form.addRow("Language", self.language)
-        form.addRow("Steps", self.steps)
-        form.addRow("Audience", self.audience)
-        layout.addLayout(form)
+        lesson_box.addWidget(_labeled("Audience", self.audience))
+        layout.addWidget(lesson_card)
 
+        rag_card, rag_box = _card("Retrieval", "indigo")
         rag_row = QHBoxLayout()
         self.use_rag = QCheckBox("Use indexed material")
         self.use_rag.setChecked(True)
@@ -372,32 +565,39 @@ class StudioWindow(QMainWindow):
         rag_row.addWidget(self.use_rag)
         rag_row.addWidget(self.use_rerank)
         rag_row.addWidget(self.use_ocr)
-        layout.addLayout(rag_row)
-
+        rag_row.addStretch(1)
+        rag_box.addLayout(rag_row)
         self.rag_query = QLineEdit()
         self.rag_query.setPlaceholderText("Optional retrieval query (defaults to topic)")
-        layout.addWidget(self.rag_query)
+        rag_box.addWidget(self.rag_query)
+        layout.addWidget(rag_card)
 
-        layout.addWidget(QLabel("Material"))
+        material_card, material_box = _card("Material", "teal")
         self.material_list = QListWidget()
         self.material_list.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
-        layout.addWidget(self.material_list)
+        self.material_list.setFixedHeight(64)
+        material_box.addWidget(self.material_list)
         material_row = QHBoxLayout()
         self.add_material = QPushButton("Add file")
         self.remove_material = QPushButton("Remove")
         material_row.addWidget(self.add_material)
         material_row.addWidget(self.remove_material)
-        layout.addLayout(material_row)
+        material_row.addStretch(1)
+        material_box.addLayout(material_row)
+        layout.addWidget(material_card)
 
         self.generate_button = QPushButton("Generate lesson")
         self.generate_button.setObjectName("primary")
         layout.addWidget(self.generate_button)
         actions = QHBoxLayout()
         self.open_button = QPushButton("Open")
+        self.open_button.setObjectName("ghost")
         self.eval_button = QPushButton("Evaluate")
+        self.eval_button.setObjectName("ghost")
         self.folder_button = QPushButton("Folder")
+        self.folder_button.setObjectName("ghost")
         actions.addWidget(self.open_button)
         actions.addWidget(self.eval_button)
         actions.addWidget(self.folder_button)
@@ -424,6 +624,13 @@ class StudioWindow(QMainWindow):
         self.folder_button.clicked.connect(self._open_folder)
         self.add_material.clicked.connect(self._add_material)
         self.remove_material.clicked.connect(self._remove_material)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setWidget(content)
+        outer.addWidget(scroll)
         return tab
 
     def _build_library_tab(self) -> QWidget:
@@ -539,40 +746,6 @@ class StudioWindow(QMainWindow):
         self.save_settings.clicked.connect(self._save_settings)
         self.test_voice.clicked.connect(self._test_voice)
         return tab
-
-    def _build_board(self) -> QWidget:
-        frame = QFrame()
-        frame.setObjectName("panel")
-        layout = QVBoxLayout(frame)
-        layout.setContentsMargins(6, 6, 6, 8)
-        layout.setSpacing(6)
-        self.board_window = BoardWidget(frame_factory=self._render_board, parent=frame)
-        self.board_view = self.board_window
-        layout.addWidget(self.board_view, 1)
-
-        transport = QHBoxLayout()
-        self.play_button = QPushButton("Play")
-        self.pause_button = QPushButton("Pause")
-        self.stop_button = QPushButton("Stop")
-        self.time_label = QLabel("00:00 / 00:00")
-        self.time_label.setMinimumWidth(112)
-        self.slider = QSlider(Qt.Orientation.Horizontal)
-        self.slider.setRange(0, 1)
-        self.slider.setEnabled(False)
-        transport.addWidget(self.play_button)
-        transport.addWidget(self.pause_button)
-        transport.addWidget(self.stop_button)
-        transport.addWidget(self.slider, 1)
-        transport.addWidget(self.time_label)
-        layout.addLayout(transport)
-
-        self.play_button.clicked.connect(self._play)
-        self.pause_button.clicked.connect(self._pause)
-        self.stop_button.clicked.connect(self._stop)
-        self.slider.sliderPressed.connect(self._slider_pressed)
-        self.slider.sliderReleased.connect(self._slider_released)
-        self._set_transport(False)
-        return frame
 
     # --- library ------------------------------------------------------
     def _start_library(self) -> None:
@@ -771,7 +944,7 @@ class StudioWindow(QMainWindow):
             )
             board.add_polyline([(0.07, 0.205), (0.34, 0.205)], color="math", width_px=2.0)
             board.add_text(
-                "Write a topic, then Generate.",
+                "Preparing your lesson...",
                 at=(0.07, 0.36),
                 size=0.032,
                 color="chalk",
@@ -798,9 +971,11 @@ class StudioWindow(QMainWindow):
             self.slider.setRange(0, max(1, playback.duration_ms))
             self.slider.setValue(0)
             self._set_transport(True)
+            self._hide_status_pill()
             self.statusBar().showMessage(
-                "First step ready. Press Play while the rest prepares."
+                "First step ready. Playing while the rest prepares."
             )
+            self._play()
         self.slider.setRange(0, max(1, playback.duration_ms))
         self._update_time()
         self.board_window.update()
@@ -828,14 +1003,19 @@ class StudioWindow(QMainWindow):
             f"{lesson.title}\n"
             f"{lesson.subject} / {lesson.difficulty} / {lesson.language}"
             f" / {len(lesson.steps)} steps / {actions} actions"
-            f" / {result.playback.duration_ms / 1000:.1f}s / {narration}\n"
-            f"{result.path if result.path is not None else lesson.lesson_id}"
+            f" / {result.playback.duration_ms / 1000:.1f}s / {narration}"
+        )
+        self.meta_label.setToolTip(
+            str(result.path if result.path is not None else lesson.lesson_id)
         )
         self.quality_label.setText(
             f"Quality {report.score}/100"
             f"  ({report.errors} error, {report.warnings} warning)"
         )
         self.quality_label.setToolTip("\n".join(result.warnings))
+        self._title_pill.setText(lesson.title)
+        self._title_pill.show()
+        self._hide_status_pill()
         self.slider.setRange(0, max(1, result.playback.duration_ms))
         if not same_playback:
             self.slider.setValue(0)
@@ -843,14 +1023,22 @@ class StudioWindow(QMainWindow):
         self._set_transport(True)
         self._update_time()
         self.board_window.update()
+        self._layout_overlays()
+        if self._playback is not None and not self._playback.playing:
+            self._play()
         self.statusBar().showMessage(
             f"Ready: {lesson.lesson_id} (quality {report.score}/100, {narration})"
         )
 
     def _set_transport(self, enabled: bool) -> None:
         self.play_button.setEnabled(enabled)
-        self.pause_button.setEnabled(enabled)
-        self.stop_button.setEnabled(enabled)
+        self.skip_back_button.setEnabled(enabled)
+        self.skip_forward_button.setEnabled(enabled)
+        self.slider.setEnabled(enabled)
+        self._transport_bar.setVisible(enabled)
+        if enabled:
+            self._layout_overlays()
+        self._sync_play_button()
 
     def _update_time(self) -> None:
         duration = self._playback.duration_ms if self._playback is not None else 0
@@ -862,12 +1050,32 @@ class StudioWindow(QMainWindow):
             self._updating_slider = False
 
     # --- playback -----------------------------------------------------
+    def _sync_play_button(self) -> None:
+        if not hasattr(self, "play_button"):
+            return
+        playing = self._playback is not None and self._playback.playing
+        self.play_button.setText("⏸" if playing else "▶")
+
+    def _toggle_play(self) -> None:
+        if self._playback is None:
+            return
+        if self._playback.playing:
+            self._pause()
+        else:
+            self._play()
+
+    def _skip(self, delta_ms: int) -> None:
+        if self._playback is None:
+            return
+        self.seek_ms(self._playback.position_ms() + delta_ms)
+
     def _play(self) -> None:
         if self._playback is None:
             return
         self._playback.start()
         self._timer.start()
         self.board_window.update()
+        self._sync_play_button()
 
     def _pause(self) -> None:
         if self._playback is None:
@@ -876,6 +1084,7 @@ class StudioWindow(QMainWindow):
         self._timer.stop()
         self._update_time()
         self.board_window.update()
+        self._sync_play_button()
 
     def _stop(self) -> None:
         if self._playback is None:
@@ -885,6 +1094,7 @@ class StudioWindow(QMainWindow):
         self.slider.setValue(0)
         self._update_time()
         self.board_window.update()
+        self._sync_play_button()
 
     def _tick(self) -> None:
         if self._playback is None:
@@ -899,6 +1109,7 @@ class StudioWindow(QMainWindow):
         if self._playback.is_finished():
             self._playback.pause()
             self._timer.stop()
+            self._sync_play_button()
         self._update_time()
         self.board_window.update()
 
@@ -998,6 +1209,8 @@ class StudioWindow(QMainWindow):
             return
         self._stop()
         self._set_busy(True)
+        if self._playback is None:
+            self._set_status_pill("Preparing your lesson...")
         self._start_worker(GenerateWorker(options))
 
     def _open(self) -> None:
@@ -1018,6 +1231,8 @@ class StudioWindow(QMainWindow):
             options = replace(options, tts=tts)
         self._stop()
         self._set_busy(True)
+        if self._playback is None:
+            self._set_status_pill("Opening lesson...")
         self._start_worker(OpenWorker(path, options))
 
     def _start_worker(self, worker: GenerateWorker | OpenWorker) -> None:
@@ -1039,6 +1254,8 @@ class StudioWindow(QMainWindow):
 
     def _status(self, message: str) -> None:
         self.statusBar().showMessage(message)
+        if self._playback is None:
+            self._set_status_pill(message)
 
     def _on_result(self, result: object) -> None:
         assert isinstance(result, StudioResult)
@@ -1066,6 +1283,7 @@ class StudioWindow(QMainWindow):
 
     def _on_failed(self, message: str) -> None:
         self.statusBar().showMessage("Generation failed", 12000)
+        self._hide_status_pill()
         QMessageBox.critical(self, "Medha Studio", _friendly_error(message))
 
     def _worker_finished(self) -> None:

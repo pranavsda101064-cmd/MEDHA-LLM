@@ -1,0 +1,338 @@
+{
+  "schema_version": "1.0.0",
+  "lesson_id": "schrodinger-equation-and-cat-9d85a295",
+  "title": "Schrodinger Equation and the Cat: A Physics Lesson",
+  "subject": "physics",
+  "target_concept": "schrodinger-equation-and-cat",
+  "difficulty": "advanced",
+  "language": "en",
+  "style_id": "default",
+  "steps": [
+    {
+      "id": "s1",
+      "concept": "Schrödinger equation",
+      "narration": "The Schrödinger equation is a fundamental equation in quantum mechanics that describes how the quantum state of a physical system changes over time. It uses a wave function to predict the probability of finding a particle in a given state.",
+      "board": [
+        {
+          "id": "a1",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Schrödinger Equation",
+          "region": "title",
+          "rect": null,
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a2",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "i\\hbar \\frac{\\partial \\psi}{\\partial t} = \\hat{H} \\psi",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.22,
+            "w": 0.4,
+            "h": 0.14
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a3",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Describes how wave function evolves over time",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.38,
+            "w": 0.4,
+            "h": 0.08
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s2",
+      "concept": "Wave function",
+      "narration": "A wave function describes the state of a quantum system. It contains all the information about a particle's position and momentum, and its square gives the probability of finding the particle in a given place.",
+      "board": [
+        {
+          "id": "a4",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Wave function",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.2,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a5",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\psi(x,t)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.32,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a6",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "\\|\\psi(x,t)\\|^2 = probability",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.44,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s3",
+      "concept": "Superposition",
+      "narration": "In quantum mechanics, superposition means a particle can exist in multiple states at once until measured. For example, an electron can spin both up and down simultaneously. This is not like a mixed state-it's a true blend of possibilities.",
+      "board": [
+        {
+          "id": "a7",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Superposition",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a8",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\psi = c_1 \\psi_1 + c_2 \\psi_2",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.56,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a9",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a8",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s4",
+      "concept": "measurement problem",
+      "narration": "When we measure a quantum system, the wave function collapses to one definite state. This means superposition ends, and we see only one outcome. The act of measurement forces the system to choose a result.",
+      "board": [
+        {
+          "id": "a10",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Measurement collapses wave function",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a11",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\psi \\to \\mathrm{definite state}",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.68,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a12",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a11",
+          "color": "yellow",
+          "width": 6.0
+        }
+      ],
+      "checkpoint": null
+    },
+    {
+      "id": "s5",
+      "concept": "Schrödinger's cat",
+      "narration": "In Schrödinger's cat thought experiment, a cat is placed in a box with a radioactive atom, a Geiger counter, and a vial of poison. If the atom decays, the Geiger counter triggers the release of poison, killing the cat. Until observed, the system is in superposition: the cat is both alive and dead simultaneously. This illustrates the strange implications of quantum superposition on macroscopic objects.",
+      "board": [
+        {
+          "id": "a13",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_text",
+          "text": "Schrödinger's Cat",
+          "region": "auto",
+          "rect": {
+            "x": 0.06,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "style": {
+            "font_size": 1.0,
+            "color": "chalk",
+            "bold": false,
+            "underline": false,
+            "align": "left"
+          },
+          "speed": 0.045
+        },
+        {
+          "id": "a14",
+          "duration_ms": 800,
+          "start": null,
+          "op": "write_math",
+          "latex": "\\mathrm{Cat: } \\psi = \\frac{1}{\\sqrt{2}} (|\\mathrm{alive}\\rangle + |\\mathrm{dead}\\rangle)",
+          "region": "auto",
+          "rect": {
+            "x": 0.54,
+            "y": 0.8,
+            "w": 0.4,
+            "h": 0.1
+          },
+          "font_size": 1.4,
+          "color": "math",
+          "speed": 0.06
+        },
+        {
+          "id": "a15",
+          "duration_ms": 800,
+          "start": null,
+          "op": "highlight",
+          "target": "a14",
+          "color": "yellow",
+          "width": 6.0
+        },
+        {
+          "id": "a16",
+          "duration_ms": 1000,
+          "start": null,
+          "op": "pause"
+        }
+      ],
+      "checkpoint": null
+    }
+  ],
+  "meta": {
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "prompt_version": "b13-v1",
+    "material_hash": "2946f5424cda7f5d2651688a6e28a554b3a1d05f95502e1f71236dd350d3d536",
+    "style_id": "default",
+    "created_at": "2026-10-29T15:43:19+00:00",
+    "estimated_duration_s": 84.8,
+    "sources": [
+      "Corrosion-Module 4.pdf, pages 2-3 > Types of Corrosion",
+      "Corrosion-Module 4.pdf, pages 1-2 > CORROSION CHEMISTRY",
+      "Sensors Module 4.pdf, pages 2-3 > Theory:",
+      "Sensors Module 4.pdf, pages 3-4 > (a) Movement of ions towards cathode & anode",
+      "Corrosion-Module 4.pdf, page 2 > c) In de-aerated and acidic environment:",
+      "Corrosion-Module 4.pdf, pages 8-9 > Weight loss method for Measuring Uniform Corrosion"
+    ],
+    "translated_from": null,
+    "translation_model": null,
+    "source_lesson_id": null
+  }
+}
